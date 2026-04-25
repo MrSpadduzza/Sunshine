@@ -51,6 +51,17 @@ namespace config {
       std::optional<int> qsv_preset;
       std::optional<int> qsv_cavlc;
       bool qsv_slow_hevc;
+      // Additional QSV options
+      std::optional<int> qsv_async_depth;
+      std::optional<int> qsv_low_delay_brc;
+      std::optional<int> qsv_low_power;
+      std::optional<int> qsv_extbrc;
+      std::optional<int> qsv_look_ahead;
+      std::optional<int> qsv_look_ahead_depth;
+      std::optional<int> qsv_mbbrc;
+      std::optional<int> qsv_adaptive_i;
+      std::optional<int> qsv_adaptive_b;
+      //
     } qsv;
 
     struct {

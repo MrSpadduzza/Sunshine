@@ -285,6 +285,20 @@ namespace config {
       return std::nullopt;
     }
 
+    // Optional for advanced QSV encoder
+    std::optional<int> on_off_auto_from_view(const std::string_view &value) {
+      if (value == "auto"sv) {
+        return std::nullopt;
+      }
+      if (value == "enabled"sv || value == "on"sv || value == "true"sv || value == "1"sv) {
+        return 1;
+      }
+      if (value == "disabled"sv || value == "off"sv || value == "false"sv || value == "0"sv) {
+        return 0;
+      }
+      return std::nullopt;
+    }    
+
   }  // namespace qsv
 
   namespace vt {
@@ -822,6 +836,7 @@ namespace config {
     }
   }
 
+  /*
   void int_between_f(std::unordered_map<std::string, std::string> &vars, const std::string &name, int &input, const std::pair<int, int> &range) {
     int temp = input;
 
@@ -832,6 +847,18 @@ namespace config {
       input = temp;
     }
   }
+  */
+  // Range helper optional-aware for advanced QSV encoder
+  void int_between_f(std::unordered_map<std::string, std::string> &vars, const std::string &name, std::optional<int> &input, const std::pair<int, int> &range) {
+    std::optional<int> temp;
+
+    int_f(vars, name, temp);
+
+    TUPLE_2D_REF(lower, upper, range);
+    if (temp && *temp >= lower && *temp <= upper) {
+      input = temp;
+    }
+  }  
 
   bool to_bool(std::string &boolean) {
     std::for_each(std::begin(boolean), std::end(boolean), [](char ch) {
@@ -1085,6 +1112,16 @@ namespace config {
     int_f(vars, "qsv_preset", video.qsv.qsv_preset, qsv::preset_from_view);
     int_f(vars, "qsv_coder", video.qsv.qsv_cavlc, qsv::coder_from_view);
     bool_f(vars, "qsv_slow_hevc", video.qsv.qsv_slow_hevc);
+    // Advanced QSV encoder settings
+    int_between_f(vars, "qsv_async_depth", video.qsv.qsv_async_depth, {1, 16});
+    int_f(vars, "qsv_low_delay_brc", video.qsv.qsv_low_delay_brc, qsv::on_off_auto_from_view);
+    int_f(vars, "qsv_low_power", video.qsv.qsv_low_power, qsv::on_off_auto_from_view);
+    int_f(vars, "qsv_extbrc", video.qsv.qsv_extbrc, qsv::on_off_auto_from_view);
+    int_f(vars, "qsv_look_ahead", video.qsv.qsv_look_ahead, qsv::on_off_auto_from_view);
+    int_between_f(vars, "qsv_look_ahead_depth", video.qsv.qsv_look_ahead_depth, {0, 100});
+    int_f(vars, "qsv_mbbrc", video.qsv.qsv_mbbrc, qsv::on_off_auto_from_view);
+    int_f(vars, "qsv_adaptive_i", video.qsv.qsv_adaptive_i, qsv::on_off_auto_from_view);
+    int_f(vars, "qsv_adaptive_b", video.qsv.qsv_adaptive_b, qsv::on_off_auto_from_view);    
 
     std::string quality;
     string_f(vars, "amd_quality", quality);

@@ -629,9 +629,27 @@ namespace video {
       {
         {"preset"s, &config::video.qsv.qsv_preset},
         {"forced_idr"s, 1},
+        /*
         {"async_depth"s, 1},
         {"low_delay_brc"s, 1},
         {"low_power"s, 1},
+        */
+        // Replace hardcoded AV1 QSV options with config-backed options
+        {"async_depth"s, []() {
+          return config::video.qsv.qsv_async_depth.value_or(1);
+        }},
+        {"low_delay_brc"s, []() {
+          return config::video.qsv.qsv_low_delay_brc.value_or(1);
+        }},
+        {"low_power"s, []() {
+          return config::video.qsv.qsv_low_power.value_or(1);
+        }},
+        {"extbrc"s, &config::video.qsv.qsv_extbrc},
+        {"look_ahead"s, &config::video.qsv.qsv_look_ahead},
+        {"look_ahead_depth"s, &config::video.qsv.qsv_look_ahead_depth},
+        {"mbbrc"s, &config::video.qsv.qsv_mbbrc},
+        {"adaptive_i"s, &config::video.qsv.qsv_adaptive_i},
+        {"adaptive_b"s, &config::video.qsv.qsv_adaptive_b},        
       },
       {
         // SDR-specific options
@@ -657,9 +675,28 @@ namespace video {
       {
         {"preset"s, &config::video.qsv.qsv_preset},
         {"forced_idr"s, 1},
+        /*
         {"async_depth"s, 1},
         {"low_delay_brc"s, 1},
         {"low_power"s, 1},
+        */
+        // Replace hardcoded HEVC QSV options with config-backed options
+        {"async_depth"s, []() {
+          return config::video.qsv.qsv_async_depth.value_or(1);
+        }},
+        {"low_delay_brc"s, []() {
+          return config::video.qsv.qsv_low_delay_brc.value_or(1);
+        }},
+        {"low_power"s, []() {
+          return config::video.qsv.qsv_low_power.value_or(1);
+        }},
+        {"extbrc"s, &config::video.qsv.qsv_extbrc},
+        {"look_ahead"s, &config::video.qsv.qsv_look_ahead},
+        {"look_ahead_depth"s, &config::video.qsv.qsv_look_ahead_depth},
+        {"mbbrc"s, &config::video.qsv.qsv_mbbrc},
+        {"adaptive_i"s, &config::video.qsv.qsv_adaptive_i},
+        {"adaptive_b"s, &config::video.qsv.qsv_adaptive_b},
+        //        
         {"recovery_point_sei"s, 0},
         {"pic_timing_sei"s, 0},
       },
@@ -681,9 +718,18 @@ namespace video {
       },
       {
         // Fallback options
+        /*
         {"low_power"s, []() {
            return config::video.qsv.qsv_slow_hevc ? 0 : 1;
          }},
+        */
+        // Replace HEVC fallback options with config-backed options
+        {"low_power"s, []() {
+          if (config::video.qsv.qsv_low_power) {
+            return *config::video.qsv.qsv_low_power;
+          }
+          return config::video.qsv.qsv_slow_hevc ? 0 : 1;
+        }},        
       },
       "hevc_qsv"s,
     },
@@ -693,9 +739,28 @@ namespace video {
         {"preset"s, &config::video.qsv.qsv_preset},
         {"cavlc"s, &config::video.qsv.qsv_cavlc},
         {"forced_idr"s, 1},
+        /*
         {"async_depth"s, 1},
         {"low_delay_brc"s, 1},
         {"low_power"s, 1},
+        */
+        // Replace hardcoded H.264 QSV options with config-backed options
+        {"async_depth"s, []() {
+          return config::video.qsv.qsv_async_depth.value_or(1);
+        }},
+        {"low_delay_brc"s, []() {
+          return config::video.qsv.qsv_low_delay_brc.value_or(1);
+        }},
+        {"low_power"s, []() {
+          return config::video.qsv.qsv_low_power.value_or(1);
+        }},
+        {"extbrc"s, &config::video.qsv.qsv_extbrc},
+        {"look_ahead"s, &config::video.qsv.qsv_look_ahead},
+        {"look_ahead_depth"s, &config::video.qsv.qsv_look_ahead_depth},
+        {"mbbrc"s, &config::video.qsv.qsv_mbbrc},
+        {"adaptive_i"s, &config::video.qsv.qsv_adaptive_i},
+        {"adaptive_b"s, &config::video.qsv.qsv_adaptive_b},
+        //        
         {"recovery_point_sei"s, 0},
         {"vcm"s, 1},
         {"pic_timing_sei"s, 0},
@@ -713,7 +778,11 @@ namespace video {
       {},  // YUV444 HDR-specific options
       {
         // Fallback options
-        {"low_power"s, 0},  // Some old/low-end Intel GPUs don't support low power encoding
+        //{"low_power"s, 0},  // Some old/low-end Intel GPUs don't support low power encoding
+        // Replace H.264 fallback options with config-backed options
+        {"low_power"s, []() {
+          return config::video.qsv.qsv_low_power.value_or(0);
+        }},    
       },
       "h264_qsv"s,
     },
