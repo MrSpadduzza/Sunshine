@@ -836,7 +836,7 @@ namespace config {
     }
   }
 
-  /*
+  
   void int_between_f(std::unordered_map<std::string, std::string> &vars, const std::string &name, int &input, const std::pair<int, int> &range) {
     int temp = input;
 
@@ -847,7 +847,7 @@ namespace config {
       input = temp;
     }
   }
-  */
+  
   // Range helper optional-aware for advanced QSV encoder
   void int_between_f(std::unordered_map<std::string, std::string> &vars, const std::string &name, std::optional<int> &input, const std::pair<int, int> &range) {
     std::optional<int> temp;
