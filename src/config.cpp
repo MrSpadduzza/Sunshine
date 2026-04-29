@@ -836,7 +836,6 @@ namespace config {
     }
   }
 
-  /*
   void int_between_f(std::unordered_map<std::string, std::string> &vars, const std::string &name, int &input, const std::pair<int, int> &range) {
     int temp = input;
 
@@ -847,7 +846,7 @@ namespace config {
       input = temp;
     }
   }
-  */
+  
   // Range helper optional-aware for advanced QSV encoder
   void int_between_f(std::unordered_map<std::string, std::string> &vars, const std::string &name, std::optional<int> &input, const std::pair<int, int> &range) {
     std::optional<int> temp;
@@ -1121,7 +1120,46 @@ namespace config {
     int_between_f(vars, "qsv_look_ahead_depth", video.qsv.qsv_look_ahead_depth, {0, 100});
     int_f(vars, "qsv_mbbrc", video.qsv.qsv_mbbrc, qsv::on_off_auto_from_view);
     int_f(vars, "qsv_adaptive_i", video.qsv.qsv_adaptive_i, qsv::on_off_auto_from_view);
-    int_f(vars, "qsv_adaptive_b", video.qsv.qsv_adaptive_b, qsv::on_off_auto_from_view);    
+    int_f(vars, "qsv_adaptive_b", video.qsv.qsv_adaptive_b, qsv::on_off_auto_from_view);
+
+    int_between_f(vars, "qsv_bitrate", video.qsv.qsv_bitrate, {0, std::numeric_limits<int>::max()});
+    int_between_f(vars, "qsv_max_bitrate", video.qsv.qsv_max_bitrate, {0, std::numeric_limits<int>::max()});
+    int_between_f(vars, "qsv_rc_buffer_size", video.qsv.qsv_rc_buffer_size, {0, std::numeric_limits<int>::max()});
+    int_between_f(vars, "qsv_rc_initial_buffer_occupancy", video.qsv.qsv_rc_initial_buffer_occupancy, {0, std::numeric_limits<int>::max()});
+    int_between_f(vars, "qsv_global_quality", video.qsv.qsv_global_quality, {0, 51});
+    int_f(vars, "qsv_qscale", video.qsv.qsv_qscale, qsv::on_off_auto_from_view);
+    int_f(vars, "qsv_vcm", video.qsv.qsv_vcm, qsv::on_off_auto_from_view);
+    int_between_f(vars, "qsv_avbr_accuracy", video.qsv.qsv_avbr_accuracy, {0, 10000});
+    int_between_f(vars, "qsv_avbr_convergence", video.qsv.qsv_avbr_convergence, {0, 10000});
+
+    int_between_f(vars, "qsv_max_frame_size", video.qsv.qsv_max_frame_size, {0, std::numeric_limits<int>::max()});
+    int_between_f(vars, "qsv_max_frame_size_i", video.qsv.qsv_max_frame_size_i, {0, std::numeric_limits<int>::max()});
+    int_between_f(vars, "qsv_max_frame_size_p", video.qsv.qsv_max_frame_size_p, {0, std::numeric_limits<int>::max()});
+    int_between_f(vars, "qsv_qmin", video.qsv.qsv_qmin, {0, 255});
+    int_between_f(vars, "qsv_qmax", video.qsv.qsv_qmax, {0, 255});
+    int_between_f(vars, "qsv_min_qp_i", video.qsv.qsv_min_qp_i, {0, 255});
+    int_between_f(vars, "qsv_max_qp_i", video.qsv.qsv_max_qp_i, {0, 255});
+    int_between_f(vars, "qsv_min_qp_p", video.qsv.qsv_min_qp_p, {0, 255});
+    int_between_f(vars, "qsv_max_qp_p", video.qsv.qsv_max_qp_p, {0, 255});
+    int_between_f(vars, "qsv_min_qp_b", video.qsv.qsv_min_qp_b, {0, 255});
+    int_between_f(vars, "qsv_max_qp_b", video.qsv.qsv_max_qp_b, {0, 255});
+    int_f(vars, "qsv_bitrate_limit", video.qsv.qsv_bitrate_limit, qsv::on_off_auto_from_view);
+    int_f(vars, "qsv_rdo", video.qsv.qsv_rdo, qsv::on_off_auto_from_view);
+    int_between_f(vars, "qsv_p_strategy", video.qsv.qsv_p_strategy, {0, 2});
+    int_f(vars, "qsv_b_strategy", video.qsv.qsv_b_strategy, qsv::on_off_auto_from_view);
+    int_between_f(vars, "qsv_dblk_idc", video.qsv.qsv_dblk_idc, {0, 2});
+    int_between_f(vars, "qsv_idr_interval", video.qsv.qsv_idr_interval, {0, std::numeric_limits<int>::max()});
+    int_f(vars, "qsv_aud", video.qsv.qsv_aud, qsv::on_off_auto_from_view);
+    int_f(vars, "qsv_repeat_pps", video.qsv.qsv_repeat_pps, qsv::on_off_auto_from_view);
+    int_f(vars, "qsv_gpb", video.qsv.qsv_gpb, qsv::on_off_auto_from_view);
+    int_between_f(vars, "qsv_tile_cols", video.qsv.qsv_tile_cols, {0, 65535});
+    int_between_f(vars, "qsv_tile_rows", video.qsv.qsv_tile_rows, {0, 65535});
+    int_between_f(vars, "qsv_int_ref_cycle_size", video.qsv.qsv_int_ref_cycle_size, {0, std::numeric_limits<int>::max()});
+    int_between_f(vars, "qsv_int_ref_qp_delta", video.qsv.qsv_int_ref_qp_delta, {-75, 75});
+    int_between_f(vars, "qsv_int_ref_cycle_dist", video.qsv.qsv_int_ref_cycle_dist, {0, std::numeric_limits<int>::max()});
+    string_f(vars, "qsv_scenario", video.qsv.qsv_scenario);
+    string_f(vars, "qsv_look_ahead_downsampling", video.qsv.qsv_look_ahead_downsampling);
+    string_f(vars, "qsv_int_ref_type", video.qsv.qsv_int_ref_type);
 
     std::string quality;
     string_f(vars, "amd_quality", quality);

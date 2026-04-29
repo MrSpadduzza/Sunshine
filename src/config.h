@@ -61,6 +61,47 @@ namespace config {
       std::optional<int> qsv_mbbrc;
       std::optional<int> qsv_adaptive_i;
       std::optional<int> qsv_adaptive_b;
+
+      // QSV rate-control primitives
+      std::optional<int> qsv_bitrate;
+      std::optional<int> qsv_max_bitrate;
+      std::optional<int> qsv_rc_buffer_size;
+      std::optional<int> qsv_rc_initial_buffer_occupancy;
+      std::optional<int> qsv_global_quality;
+      std::optional<int> qsv_qscale;
+      std::optional<int> qsv_vcm;
+      std::optional<int> qsv_avbr_accuracy;
+      std::optional<int> qsv_avbr_convergence;
+
+      // Additional FFmpeg QSV controls
+      std::optional<int> qsv_max_frame_size;
+      std::optional<int> qsv_max_frame_size_i;
+      std::optional<int> qsv_max_frame_size_p;
+      std::optional<int> qsv_qmin;
+      std::optional<int> qsv_qmax;
+      std::optional<int> qsv_min_qp_i;
+      std::optional<int> qsv_max_qp_i;
+      std::optional<int> qsv_min_qp_p;
+      std::optional<int> qsv_max_qp_p;
+      std::optional<int> qsv_min_qp_b;
+      std::optional<int> qsv_max_qp_b;
+      std::optional<int> qsv_bitrate_limit;
+      std::optional<int> qsv_rdo;
+      std::optional<int> qsv_p_strategy;
+      std::optional<int> qsv_b_strategy;
+      std::optional<int> qsv_dblk_idc;
+      std::optional<int> qsv_idr_interval;
+      std::optional<int> qsv_aud;
+      std::optional<int> qsv_repeat_pps;
+      std::optional<int> qsv_gpb;
+      std::optional<int> qsv_tile_cols;
+      std::optional<int> qsv_tile_rows;
+      std::optional<int> qsv_int_ref_cycle_size;
+      std::optional<int> qsv_int_ref_qp_delta;
+      std::optional<int> qsv_int_ref_cycle_dist;
+      std::string qsv_scenario;
+      std::string qsv_look_ahead_downsampling;
+      std::string qsv_int_ref_type;
       //
     } qsv;
 

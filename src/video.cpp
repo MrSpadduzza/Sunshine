@@ -649,7 +649,12 @@ namespace video {
         {"look_ahead_depth"s, &config::video.qsv.qsv_look_ahead_depth},
         {"mbbrc"s, &config::video.qsv.qsv_mbbrc},
         {"adaptive_i"s, &config::video.qsv.qsv_adaptive_i},
-        {"adaptive_b"s, &config::video.qsv.qsv_adaptive_b},        
+        {"adaptive_b"s, &config::video.qsv.qsv_adaptive_b},
+        {"max_frame_size"s, &config::video.qsv.qsv_max_frame_size},
+        {"max_frame_size_i"s, &config::video.qsv.qsv_max_frame_size_i},
+        {"max_frame_size_p"s, &config::video.qsv.qsv_max_frame_size_p},
+        {"tile_cols"s, &config::video.qsv.qsv_tile_cols},
+        {"tile_rows"s, &config::video.qsv.qsv_tile_rows},        
       },
       {
         // SDR-specific options
@@ -696,6 +701,31 @@ namespace video {
         {"mbbrc"s, &config::video.qsv.qsv_mbbrc},
         {"adaptive_i"s, &config::video.qsv.qsv_adaptive_i},
         {"adaptive_b"s, &config::video.qsv.qsv_adaptive_b},
+        {"max_frame_size"s, &config::video.qsv.qsv_max_frame_size},
+        {"max_frame_size_i"s, &config::video.qsv.qsv_max_frame_size_i},
+        {"max_frame_size_p"s, &config::video.qsv.qsv_max_frame_size_p},
+        {"max_qp_i"s, &config::video.qsv.qsv_max_qp_i},
+        {"min_qp_i"s, &config::video.qsv.qsv_min_qp_i},
+        {"max_qp_p"s, &config::video.qsv.qsv_max_qp_p},
+        {"min_qp_p"s, &config::video.qsv.qsv_min_qp_p},
+        {"max_qp_b"s, &config::video.qsv.qsv_max_qp_b},
+        {"min_qp_b"s, &config::video.qsv.qsv_min_qp_b},
+        {"rdo"s, &config::video.qsv.qsv_rdo},
+        {"p_strategy"s, &config::video.qsv.qsv_p_strategy},
+        {"b_strategy"s, &config::video.qsv.qsv_b_strategy},
+        {"dblk_idc"s, &config::video.qsv.qsv_dblk_idc},
+        {"idr_interval"s, &config::video.qsv.qsv_idr_interval},
+        {"aud"s, &config::video.qsv.qsv_aud},
+        {"int_ref_type"s, &config::video.qsv.qsv_int_ref_type},
+        {"int_ref_cycle_size"s, &config::video.qsv.qsv_int_ref_cycle_size},
+        {"int_ref_qp_delta"s, &config::video.qsv.qsv_int_ref_qp_delta},
+        {"int_ref_cycle_dist"s, &config::video.qsv.qsv_int_ref_cycle_dist},
+        {"scenario"s, &config::video.qsv.qsv_scenario},
+        {"avbr_accuracy"s, &config::video.qsv.qsv_avbr_accuracy},
+        {"avbr_convergence"s, &config::video.qsv.qsv_avbr_convergence},
+        {"gpb"s, &config::video.qsv.qsv_gpb},
+        {"tile_cols"s, &config::video.qsv.qsv_tile_cols},
+        {"tile_rows"s, &config::video.qsv.qsv_tile_rows},
         //        
         {"recovery_point_sei"s, 0},
         {"pic_timing_sei"s, 0},
@@ -760,9 +790,38 @@ namespace video {
         {"mbbrc"s, &config::video.qsv.qsv_mbbrc},
         {"adaptive_i"s, &config::video.qsv.qsv_adaptive_i},
         {"adaptive_b"s, &config::video.qsv.qsv_adaptive_b},
+        {"max_frame_size"s, &config::video.qsv.qsv_max_frame_size},
+        {"max_frame_size_i"s, &config::video.qsv.qsv_max_frame_size_i},
+        {"max_frame_size_p"s, &config::video.qsv.qsv_max_frame_size_p},
+        {"max_qp_i"s, &config::video.qsv.qsv_max_qp_i},
+        {"min_qp_i"s, &config::video.qsv.qsv_min_qp_i},
+        {"max_qp_p"s, &config::video.qsv.qsv_max_qp_p},
+        {"min_qp_p"s, &config::video.qsv.qsv_min_qp_p},
+        {"max_qp_b"s, &config::video.qsv.qsv_max_qp_b},
+        {"min_qp_b"s, &config::video.qsv.qsv_min_qp_b},
+        {"rdo"s, &config::video.qsv.qsv_rdo},
+        {"p_strategy"s, &config::video.qsv.qsv_p_strategy},
+        {"b_strategy"s, &config::video.qsv.qsv_b_strategy},
+        {"dblk_idc"s, &config::video.qsv.qsv_dblk_idc},
+        {"idr_interval"s, &config::video.qsv.qsv_idr_interval},
+        {"aud"s, &config::video.qsv.qsv_aud},
+        {"int_ref_type"s, &config::video.qsv.qsv_int_ref_type},
+        {"int_ref_cycle_size"s, &config::video.qsv.qsv_int_ref_cycle_size},
+        {"int_ref_qp_delta"s, &config::video.qsv.qsv_int_ref_qp_delta},
+        {"int_ref_cycle_dist"s, &config::video.qsv.qsv_int_ref_cycle_dist},
+        {"scenario"s, &config::video.qsv.qsv_scenario},
+        {"avbr_accuracy"s, &config::video.qsv.qsv_avbr_accuracy},
+        {"avbr_convergence"s, &config::video.qsv.qsv_avbr_convergence},
+        {"qmin"s, &config::video.qsv.qsv_qmin},
+        {"qmax"s, &config::video.qsv.qsv_qmax},
+        {"bitrate_limit"s, &config::video.qsv.qsv_bitrate_limit},
+        {"look_ahead_downsampling"s, &config::video.qsv.qsv_look_ahead_downsampling},
+        {"repeat_pps"s, &config::video.qsv.qsv_repeat_pps},
         //        
         {"recovery_point_sei"s, 0},
-        {"vcm"s, 1},
+        {"vcm"s, []() {
+          return config::video.qsv.qsv_vcm.value_or(1);
+        }},
         {"pic_timing_sei"s, 0},
         {"max_dec_frame_buffering"s, 1},
       },
@@ -1792,6 +1851,44 @@ namespace video {
         ctx->bit_rate--;
       } else {
         ctx->rc_min_rate = bitrate;
+      }
+
+      if (encoder.name == "quicksync"sv) {
+        // QSV chooses its rate-control mode from AVCodecContext fields, not from a
+        // single private "rc" option. Keep Sunshine's stream bitrate as the default,
+        // but allow advanced users to override the libavcodec primitives directly.
+        if (config::video.qsv.qsv_bitrate) {
+          ctx->bit_rate = (int64_t) *config::video.qsv.qsv_bitrate * 1000;
+        }
+
+        if (config::video.qsv.qsv_max_bitrate) {
+          ctx->rc_max_rate = (int64_t) *config::video.qsv.qsv_max_bitrate * 1000;
+        }
+
+        if (config::video.qsv.qsv_rc_buffer_size) {
+          ctx->rc_buffer_size = *config::video.qsv.qsv_rc_buffer_size * 1000;
+        }
+
+        if (config::video.qsv.qsv_rc_initial_buffer_occupancy) {
+          ctx->rc_initial_buffer_occupancy = *config::video.qsv.qsv_rc_initial_buffer_occupancy * 1000;
+        }
+
+        if (config::video.qsv.qsv_qscale) {
+          if (*config::video.qsv.qsv_qscale) {
+            ctx->flags |= AV_CODEC_FLAG_QSCALE;
+          } else {
+            ctx->flags &= ~AV_CODEC_FLAG_QSCALE;
+          }
+        }
+
+        if (config::video.qsv.qsv_global_quality) {
+          const int quality = *config::video.qsv.qsv_global_quality;
+          if (quality > 0) {
+            ctx->global_quality = (ctx->flags & AV_CODEC_FLAG_QSCALE) ? quality * FF_QP2LAMBDA : quality;
+          } else {
+            ctx->global_quality = 0;
+          }
+        }
       }
 
       if (encoder.flags & RELAXED_COMPLIANCE) {
