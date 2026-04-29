@@ -1,0 +1,856 @@
+diff -ruN a/src/config.cpp b/src/config.cpp
+--- a/src/config.cpp	2026-04-25 16:38:07.000000000 +0000
++++ b/src/config.cpp	2026-04-29 16:49:37.497633587 +0000
+@@ -1121,7 +1121,46 @@
+     int_between_f(vars, "qsv_look_ahead_depth", video.qsv.qsv_look_ahead_depth, {0, 100});
+     int_f(vars, "qsv_mbbrc", video.qsv.qsv_mbbrc, qsv::on_off_auto_from_view);
+     int_f(vars, "qsv_adaptive_i", video.qsv.qsv_adaptive_i, qsv::on_off_auto_from_view);
+-    int_f(vars, "qsv_adaptive_b", video.qsv.qsv_adaptive_b, qsv::on_off_auto_from_view);    
++    int_f(vars, "qsv_adaptive_b", video.qsv.qsv_adaptive_b, qsv::on_off_auto_from_view);
++
++    int_between_f(vars, "qsv_bitrate", video.qsv.qsv_bitrate, {0, std::numeric_limits<int>::max()});
++    int_between_f(vars, "qsv_max_bitrate", video.qsv.qsv_max_bitrate, {0, std::numeric_limits<int>::max()});
++    int_between_f(vars, "qsv_rc_buffer_size", video.qsv.qsv_rc_buffer_size, {0, std::numeric_limits<int>::max()});
++    int_between_f(vars, "qsv_rc_initial_buffer_occupancy", video.qsv.qsv_rc_initial_buffer_occupancy, {0, std::numeric_limits<int>::max()});
++    int_between_f(vars, "qsv_global_quality", video.qsv.qsv_global_quality, {0, 51});
++    int_f(vars, "qsv_qscale", video.qsv.qsv_qscale, qsv::on_off_auto_from_view);
++    int_f(vars, "qsv_vcm", video.qsv.qsv_vcm, qsv::on_off_auto_from_view);
++    int_between_f(vars, "qsv_avbr_accuracy", video.qsv.qsv_avbr_accuracy, {0, 10000});
++    int_between_f(vars, "qsv_avbr_convergence", video.qsv.qsv_avbr_convergence, {0, 10000});
++
++    int_between_f(vars, "qsv_max_frame_size", video.qsv.qsv_max_frame_size, {0, std::numeric_limits<int>::max()});
++    int_between_f(vars, "qsv_max_frame_size_i", video.qsv.qsv_max_frame_size_i, {0, std::numeric_limits<int>::max()});
++    int_between_f(vars, "qsv_max_frame_size_p", video.qsv.qsv_max_frame_size_p, {0, std::numeric_limits<int>::max()});
++    int_between_f(vars, "qsv_qmin", video.qsv.qsv_qmin, {0, 255});
++    int_between_f(vars, "qsv_qmax", video.qsv.qsv_qmax, {0, 255});
++    int_between_f(vars, "qsv_min_qp_i", video.qsv.qsv_min_qp_i, {0, 255});
++    int_between_f(vars, "qsv_max_qp_i", video.qsv.qsv_max_qp_i, {0, 255});
++    int_between_f(vars, "qsv_min_qp_p", video.qsv.qsv_min_qp_p, {0, 255});
++    int_between_f(vars, "qsv_max_qp_p", video.qsv.qsv_max_qp_p, {0, 255});
++    int_between_f(vars, "qsv_min_qp_b", video.qsv.qsv_min_qp_b, {0, 255});
++    int_between_f(vars, "qsv_max_qp_b", video.qsv.qsv_max_qp_b, {0, 255});
++    int_f(vars, "qsv_bitrate_limit", video.qsv.qsv_bitrate_limit, qsv::on_off_auto_from_view);
++    int_f(vars, "qsv_rdo", video.qsv.qsv_rdo, qsv::on_off_auto_from_view);
++    int_between_f(vars, "qsv_p_strategy", video.qsv.qsv_p_strategy, {0, 2});
++    int_f(vars, "qsv_b_strategy", video.qsv.qsv_b_strategy, qsv::on_off_auto_from_view);
++    int_between_f(vars, "qsv_dblk_idc", video.qsv.qsv_dblk_idc, {0, 2});
++    int_between_f(vars, "qsv_idr_interval", video.qsv.qsv_idr_interval, {0, std::numeric_limits<int>::max()});
++    int_f(vars, "qsv_aud", video.qsv.qsv_aud, qsv::on_off_auto_from_view);
++    int_f(vars, "qsv_repeat_pps", video.qsv.qsv_repeat_pps, qsv::on_off_auto_from_view);
++    int_f(vars, "qsv_gpb", video.qsv.qsv_gpb, qsv::on_off_auto_from_view);
++    int_between_f(vars, "qsv_tile_cols", video.qsv.qsv_tile_cols, {0, 65535});
++    int_between_f(vars, "qsv_tile_rows", video.qsv.qsv_tile_rows, {0, 65535});
++    int_between_f(vars, "qsv_int_ref_cycle_size", video.qsv.qsv_int_ref_cycle_size, {0, std::numeric_limits<int>::max()});
++    int_between_f(vars, "qsv_int_ref_qp_delta", video.qsv.qsv_int_ref_qp_delta, {-75, 75});
++    int_between_f(vars, "qsv_int_ref_cycle_dist", video.qsv.qsv_int_ref_cycle_dist, {0, std::numeric_limits<int>::max()});
++    string_f(vars, "qsv_scenario", video.qsv.qsv_scenario);
++    string_f(vars, "qsv_look_ahead_downsampling", video.qsv.qsv_look_ahead_downsampling);
++    string_f(vars, "qsv_int_ref_type", video.qsv.qsv_int_ref_type);
+ 
+     std::string quality;
+     string_f(vars, "amd_quality", quality);
+diff -ruN a/src/config.h b/src/config.h
+--- a/src/config.h	2026-04-25 16:38:07.000000000 +0000
++++ b/src/config.h	2026-04-29 16:49:17.112079367 +0000
+@@ -61,6 +61,47 @@
+       std::optional<int> qsv_mbbrc;
+       std::optional<int> qsv_adaptive_i;
+       std::optional<int> qsv_adaptive_b;
++
++      // QSV rate-control primitives
++      std::optional<int> qsv_bitrate;
++      std::optional<int> qsv_max_bitrate;
++      std::optional<int> qsv_rc_buffer_size;
++      std::optional<int> qsv_rc_initial_buffer_occupancy;
++      std::optional<int> qsv_global_quality;
++      std::optional<int> qsv_qscale;
++      std::optional<int> qsv_vcm;
++      std::optional<int> qsv_avbr_accuracy;
++      std::optional<int> qsv_avbr_convergence;
++
++      // Additional FFmpeg QSV controls
++      std::optional<int> qsv_max_frame_size;
++      std::optional<int> qsv_max_frame_size_i;
++      std::optional<int> qsv_max_frame_size_p;
++      std::optional<int> qsv_qmin;
++      std::optional<int> qsv_qmax;
++      std::optional<int> qsv_min_qp_i;
++      std::optional<int> qsv_max_qp_i;
++      std::optional<int> qsv_min_qp_p;
++      std::optional<int> qsv_max_qp_p;
++      std::optional<int> qsv_min_qp_b;
++      std::optional<int> qsv_max_qp_b;
++      std::optional<int> qsv_bitrate_limit;
++      std::optional<int> qsv_rdo;
++      std::optional<int> qsv_p_strategy;
++      std::optional<int> qsv_b_strategy;
++      std::optional<int> qsv_dblk_idc;
++      std::optional<int> qsv_idr_interval;
++      std::optional<int> qsv_aud;
++      std::optional<int> qsv_repeat_pps;
++      std::optional<int> qsv_gpb;
++      std::optional<int> qsv_tile_cols;
++      std::optional<int> qsv_tile_rows;
++      std::optional<int> qsv_int_ref_cycle_size;
++      std::optional<int> qsv_int_ref_qp_delta;
++      std::optional<int> qsv_int_ref_cycle_dist;
++      std::string qsv_scenario;
++      std::string qsv_look_ahead_downsampling;
++      std::string qsv_int_ref_type;
+       //
+     } qsv;
+ 
+diff -ruN a/src/video.cpp b/src/video.cpp
+--- a/src/video.cpp	2026-04-25 16:38:07.000000000 +0000
++++ b/src/video.cpp	2026-04-29 16:50:50.164660468 +0000
+@@ -649,7 +649,12 @@
+         {"look_ahead_depth"s, &config::video.qsv.qsv_look_ahead_depth},
+         {"mbbrc"s, &config::video.qsv.qsv_mbbrc},
+         {"adaptive_i"s, &config::video.qsv.qsv_adaptive_i},
+-        {"adaptive_b"s, &config::video.qsv.qsv_adaptive_b},        
++        {"adaptive_b"s, &config::video.qsv.qsv_adaptive_b},
++        {"max_frame_size"s, &config::video.qsv.qsv_max_frame_size},
++        {"max_frame_size_i"s, &config::video.qsv.qsv_max_frame_size_i},
++        {"max_frame_size_p"s, &config::video.qsv.qsv_max_frame_size_p},
++        {"tile_cols"s, &config::video.qsv.qsv_tile_cols},
++        {"tile_rows"s, &config::video.qsv.qsv_tile_rows},        
+       },
+       {
+         // SDR-specific options
+@@ -696,6 +701,31 @@
+         {"mbbrc"s, &config::video.qsv.qsv_mbbrc},
+         {"adaptive_i"s, &config::video.qsv.qsv_adaptive_i},
+         {"adaptive_b"s, &config::video.qsv.qsv_adaptive_b},
++        {"max_frame_size"s, &config::video.qsv.qsv_max_frame_size},
++        {"max_frame_size_i"s, &config::video.qsv.qsv_max_frame_size_i},
++        {"max_frame_size_p"s, &config::video.qsv.qsv_max_frame_size_p},
++        {"max_qp_i"s, &config::video.qsv.qsv_max_qp_i},
++        {"min_qp_i"s, &config::video.qsv.qsv_min_qp_i},
++        {"max_qp_p"s, &config::video.qsv.qsv_max_qp_p},
++        {"min_qp_p"s, &config::video.qsv.qsv_min_qp_p},
++        {"max_qp_b"s, &config::video.qsv.qsv_max_qp_b},
++        {"min_qp_b"s, &config::video.qsv.qsv_min_qp_b},
++        {"rdo"s, &config::video.qsv.qsv_rdo},
++        {"p_strategy"s, &config::video.qsv.qsv_p_strategy},
++        {"b_strategy"s, &config::video.qsv.qsv_b_strategy},
++        {"dblk_idc"s, &config::video.qsv.qsv_dblk_idc},
++        {"idr_interval"s, &config::video.qsv.qsv_idr_interval},
++        {"aud"s, &config::video.qsv.qsv_aud},
++        {"int_ref_type"s, &config::video.qsv.qsv_int_ref_type},
++        {"int_ref_cycle_size"s, &config::video.qsv.qsv_int_ref_cycle_size},
++        {"int_ref_qp_delta"s, &config::video.qsv.qsv_int_ref_qp_delta},
++        {"int_ref_cycle_dist"s, &config::video.qsv.qsv_int_ref_cycle_dist},
++        {"scenario"s, &config::video.qsv.qsv_scenario},
++        {"avbr_accuracy"s, &config::video.qsv.qsv_avbr_accuracy},
++        {"avbr_convergence"s, &config::video.qsv.qsv_avbr_convergence},
++        {"gpb"s, &config::video.qsv.qsv_gpb},
++        {"tile_cols"s, &config::video.qsv.qsv_tile_cols},
++        {"tile_rows"s, &config::video.qsv.qsv_tile_rows},
+         //        
+         {"recovery_point_sei"s, 0},
+         {"pic_timing_sei"s, 0},
+@@ -760,9 +790,38 @@
+         {"mbbrc"s, &config::video.qsv.qsv_mbbrc},
+         {"adaptive_i"s, &config::video.qsv.qsv_adaptive_i},
+         {"adaptive_b"s, &config::video.qsv.qsv_adaptive_b},
++        {"max_frame_size"s, &config::video.qsv.qsv_max_frame_size},
++        {"max_frame_size_i"s, &config::video.qsv.qsv_max_frame_size_i},
++        {"max_frame_size_p"s, &config::video.qsv.qsv_max_frame_size_p},
++        {"max_qp_i"s, &config::video.qsv.qsv_max_qp_i},
++        {"min_qp_i"s, &config::video.qsv.qsv_min_qp_i},
++        {"max_qp_p"s, &config::video.qsv.qsv_max_qp_p},
++        {"min_qp_p"s, &config::video.qsv.qsv_min_qp_p},
++        {"max_qp_b"s, &config::video.qsv.qsv_max_qp_b},
++        {"min_qp_b"s, &config::video.qsv.qsv_min_qp_b},
++        {"rdo"s, &config::video.qsv.qsv_rdo},
++        {"p_strategy"s, &config::video.qsv.qsv_p_strategy},
++        {"b_strategy"s, &config::video.qsv.qsv_b_strategy},
++        {"dblk_idc"s, &config::video.qsv.qsv_dblk_idc},
++        {"idr_interval"s, &config::video.qsv.qsv_idr_interval},
++        {"aud"s, &config::video.qsv.qsv_aud},
++        {"int_ref_type"s, &config::video.qsv.qsv_int_ref_type},
++        {"int_ref_cycle_size"s, &config::video.qsv.qsv_int_ref_cycle_size},
++        {"int_ref_qp_delta"s, &config::video.qsv.qsv_int_ref_qp_delta},
++        {"int_ref_cycle_dist"s, &config::video.qsv.qsv_int_ref_cycle_dist},
++        {"scenario"s, &config::video.qsv.qsv_scenario},
++        {"avbr_accuracy"s, &config::video.qsv.qsv_avbr_accuracy},
++        {"avbr_convergence"s, &config::video.qsv.qsv_avbr_convergence},
++        {"qmin"s, &config::video.qsv.qsv_qmin},
++        {"qmax"s, &config::video.qsv.qsv_qmax},
++        {"bitrate_limit"s, &config::video.qsv.qsv_bitrate_limit},
++        {"look_ahead_downsampling"s, &config::video.qsv.qsv_look_ahead_downsampling},
++        {"repeat_pps"s, &config::video.qsv.qsv_repeat_pps},
+         //        
+         {"recovery_point_sei"s, 0},
+-        {"vcm"s, 1},
++        {"vcm"s, []() {
++          return config::video.qsv.qsv_vcm.value_or(1);
++        }},
+         {"pic_timing_sei"s, 0},
+         {"max_dec_frame_buffering"s, 1},
+       },
+@@ -1794,6 +1853,44 @@
+         ctx->rc_min_rate = bitrate;
+       }
+ 
++      if (encoder.name == "quicksync"sv) {
++        // QSV chooses its rate-control mode from AVCodecContext fields, not from a
++        // single private "rc" option. Keep Sunshine's stream bitrate as the default,
++        // but allow advanced users to override the libavcodec primitives directly.
++        if (config::video.qsv.qsv_bitrate) {
++          ctx->bit_rate = (int64_t) *config::video.qsv.qsv_bitrate * 1000;
++        }
++
++        if (config::video.qsv.qsv_max_bitrate) {
++          ctx->rc_max_rate = (int64_t) *config::video.qsv.qsv_max_bitrate * 1000;
++        }
++
++        if (config::video.qsv.qsv_rc_buffer_size) {
++          ctx->rc_buffer_size = *config::video.qsv.qsv_rc_buffer_size * 1000;
++        }
++
++        if (config::video.qsv.qsv_rc_initial_buffer_occupancy) {
++          ctx->rc_initial_buffer_occupancy = *config::video.qsv.qsv_rc_initial_buffer_occupancy * 1000;
++        }
++
++        if (config::video.qsv.qsv_qscale) {
++          if (*config::video.qsv.qsv_qscale) {
++            ctx->flags |= AV_CODEC_FLAG_QSCALE;
++          } else {
++            ctx->flags &= ~AV_CODEC_FLAG_QSCALE;
++          }
++        }
++
++        if (config::video.qsv.qsv_global_quality) {
++          const int quality = *config::video.qsv.qsv_global_quality;
++          if (quality > 0) {
++            ctx->global_quality = (ctx->flags & AV_CODEC_FLAG_QSCALE) ? quality * FF_QP2LAMBDA : quality;
++          } else {
++            ctx->global_quality = 0;
++          }
++        }
++      }
++
+       if (encoder.flags & RELAXED_COMPLIANCE) {
+         ctx->strict_std_compliance = FF_COMPLIANCE_UNOFFICIAL;
+       }
+diff -ruN a/src_assets/common/assets/web/configs/tabs/encoders/IntelQuickSyncEncoder.vue b/src_assets/common/assets/web/configs/tabs/encoders/IntelQuickSyncEncoder.vue
+--- a/src_assets/common/assets/web/configs/tabs/encoders/IntelQuickSyncEncoder.vue	2026-04-25 16:38:07.000000000 +0000
++++ b/src_assets/common/assets/web/configs/tabs/encoders/IntelQuickSyncEncoder.vue	2026-04-29 16:54:28.769170591 +0000
+@@ -1,5 +1,5 @@
+ <script setup>
+-import { ref } from 'vue'
++import { computed, ref } from 'vue'
+ import Checkbox from "../../../Checkbox.vue";
+ 
+ const props = defineProps([
+@@ -8,6 +8,117 @@
+ ])
+ 
+ const config = ref(props.config)
++
++const numberOrNull = (value) => {
++  if (value === undefined || value === null || value === '') {
++    return null
++  }
++
++  const n = Number(value)
++  return Number.isFinite(n) ? n : null
++}
++
++const triStateEnabled = (value, autoDefault = false) => {
++  if (value === undefined || value === null || value === '' || value === 'auto') {
++    return autoDefault
++  }
++
++  return value === true || value === 1 || value === '1' || value === 'enabled' || value === 'on' || value === 'true'
++}
++
++const qsvPredictedRateControl = computed(() => {
++  const qscale = triStateEnabled(config.value.qsv_qscale, false)
++  const lookAhead = triStateEnabled(config.value.qsv_look_ahead, false)
++  const vcm = triStateEnabled(config.value.qsv_vcm, true)
++  const globalQuality = numberOrNull(config.value.qsv_global_quality)
++  const bitrate = numberOrNull(config.value.qsv_bitrate)
++  const maxrate = numberOrNull(config.value.qsv_max_bitrate)
++  const avbrAccuracy = numberOrNull(config.value.qsv_avbr_accuracy)
++  const avbrConvergence = numberOrNull(config.value.qsv_avbr_convergence)
++
++  const exclusiveModes = [qscale, lookAhead, vcm].filter(Boolean).length
++  if (exclusiveModes > 1) {
++    return {
++      name: 'Invalid / conflicting',
++      description: 'FFmpeg QSV accepts only one of fixed qscale, lookahead, or VCM at a time.',
++      warning: true,
++    }
++  }
++
++  if (qscale) {
++    return {
++      name: 'CQP',
++      description: 'Fixed qscale is enabled, so QSV will request constant quantization parameter mode. Set Global Quality to choose the QP value.',
++      warning: !(globalQuality && globalQuality > 0),
++    }
++  }
++
++  if (vcm) {
++    return {
++      name: 'VCM for H.264; otherwise bitrate/quality-derived',
++      description: 'Sunshine historically enables VCM for h264_qsv. Disable QSV VCM to allow H.264 CBR/VBR/QVBR/ICQ selection.',
++    }
++  }
++
++  if (lookAhead) {
++    if (globalQuality && globalQuality > 0) {
++      return {
++        name: 'LA_ICQ',
++        description: 'Lookahead and Global Quality are enabled, so QSV will request intelligent constant quality with lookahead.',
++      }
++    }
++
++    return {
++      name: 'LA',
++      description: 'Lookahead is enabled without Global Quality, so QSV will request VBR with lookahead.',
++    }
++  }
++
++  const maxrateDisabled = maxrate === 0
++  const bitrateDisabled = bitrate === 0
++  const hasBitrate = !bitrateDisabled
++  const hasMaxrate = !maxrateDisabled
++
++  if (globalQuality && globalQuality > 0 && !hasMaxrate) {
++    return {
++      name: 'ICQ',
++      description: 'Global Quality is set and maxrate is disabled, so QSV will request intelligent constant quality.',
++    }
++  }
++
++  if (hasBitrate) {
++    if (hasMaxrate && bitrate !== null && maxrate !== null && bitrate === maxrate) {
++      return {
++        name: 'CBR',
++        description: 'Bitrate and Max Bitrate are both set to the same value.',
++      }
++    }
++
++    if (!hasMaxrate && avbrAccuracy && avbrAccuracy > 0 && avbrConvergence && avbrConvergence > 0) {
++      return {
++        name: 'AVBR',
++        description: 'Maxrate is disabled and AVBR accuracy/convergence are set. This applies to H.264/HEVC when the QSV runtime supports it.',
++      }
++    }
++
++    if (globalQuality && globalQuality > 0) {
++      return {
++        name: 'QVBR',
++        description: 'Bitrate is present together with Global Quality, so QSV will request quality-defined VBR.',
++      }
++    }
++
++    return {
++      name: 'VBR',
++      description: 'Sunshine supplies a bitrate and maxrate by default; unless they are equal, QSV will request variable bitrate.',
++    }
++  }
++
++  return {
++    name: 'CQP',
++    description: 'No bitrate is present, so FFmpeg QSV falls back to constant quantization parameter mode.',
++  }
++})
+ </script>
+ 
+ <template>
+@@ -44,6 +155,101 @@
+               default="false"
+     ></Checkbox>
+ 
++    <!-- QSV rate-control primitive settings -->
++    <div class="mb-3 accordion">
++      <div class="accordion-item">
++        <h2 class="accordion-header">
++          <button class="accordion-button" type="button" data-bs-toggle="collapse"
++                  data-bs-target="#qsv-rate-control-options">
++            {{ $t('config.qsv_rate_control_options') }}
++          </button>
++        </h2>
++
++        <div id="qsv-rate-control-options" class="accordion-collapse collapse show">
++          <div class="accordion-body">
++            <div class="alert mb-3" :class="qsvPredictedRateControl.warning ? 'alert-warning' : 'alert-info'">
++              <strong>{{ $t('config.qsv_predicted_rate_control') }}:</strong>
++              {{ qsvPredictedRateControl.name }}
++              <div class="small mt-1">{{ qsvPredictedRateControl.description }}</div>
++            </div>
++
++            <div class="row">
++              <div class="mb-3 col-md-6">
++                <label for="qsv_bitrate" class="form-label">{{ $t('config.qsv_bitrate') }}</label>
++                <input type="number" min="0" class="form-control" id="qsv_bitrate"
++                       :placeholder="$t('config.qsv_use_stream_bitrate')" v-model="config.qsv_bitrate" />
++                <div class="form-text">{{ $t('config.qsv_bitrate_desc') }}</div>
++              </div>
++
++              <div class="mb-3 col-md-6">
++                <label for="qsv_max_bitrate" class="form-label">{{ $t('config.qsv_max_bitrate') }}</label>
++                <input type="number" min="0" class="form-control" id="qsv_max_bitrate"
++                       :placeholder="$t('config.qsv_use_stream_bitrate')" v-model="config.qsv_max_bitrate" />
++                <div class="form-text">{{ $t('config.qsv_max_bitrate_desc') }}</div>
++              </div>
++            </div>
++
++            <div class="row">
++              <div class="mb-3 col-md-6">
++                <label for="qsv_global_quality" class="form-label">{{ $t('config.qsv_global_quality') }}</label>
++                <input type="number" min="0" max="51" class="form-control" id="qsv_global_quality"
++                       placeholder="0" v-model="config.qsv_global_quality" />
++                <div class="form-text">{{ $t('config.qsv_global_quality_desc') }}</div>
++              </div>
++
++              <div class="mb-3 col-md-6">
++                <label for="qsv_qscale" class="form-label">{{ $t('config.qsv_qscale') }}</label>
++                <select id="qsv_qscale" class="form-select" v-model="config.qsv_qscale">
++                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
++                  <option value="enabled">{{ $t('_common.enabled') }}</option>
++                  <option value="disabled">{{ $t('_common.disabled') }}</option>
++                </select>
++                <div class="form-text">{{ $t('config.qsv_qscale_desc') }}</div>
++              </div>
++            </div>
++
++            <div class="row">
++              <div class="mb-3 col-md-6">
++                <label for="qsv_rc_buffer_size" class="form-label">{{ $t('config.qsv_rc_buffer_size') }}</label>
++                <input type="number" min="0" class="form-control" id="qsv_rc_buffer_size"
++                       placeholder="0" v-model="config.qsv_rc_buffer_size" />
++              </div>
++
++              <div class="mb-3 col-md-6">
++                <label for="qsv_rc_initial_buffer_occupancy" class="form-label">{{ $t('config.qsv_rc_initial_buffer_occupancy') }}</label>
++                <input type="number" min="0" class="form-control" id="qsv_rc_initial_buffer_occupancy"
++                       placeholder="0" v-model="config.qsv_rc_initial_buffer_occupancy" />
++              </div>
++            </div>
++
++            <div class="row">
++              <div class="mb-3 col-md-4">
++                <label for="qsv_vcm" class="form-label">{{ $t('config.qsv_vcm') }}</label>
++                <select id="qsv_vcm" class="form-select" v-model="config.qsv_vcm">
++                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
++                  <option value="enabled">{{ $t('_common.enabled') }}</option>
++                  <option value="disabled">{{ $t('_common.disabled') }}</option>
++                </select>
++                <div class="form-text">{{ $t('config.qsv_vcm_desc') }}</div>
++              </div>
++
++              <div class="mb-3 col-md-4">
++                <label for="qsv_avbr_accuracy" class="form-label">{{ $t('config.qsv_avbr_accuracy') }}</label>
++                <input type="number" min="0" class="form-control" id="qsv_avbr_accuracy"
++                       placeholder="0" v-model="config.qsv_avbr_accuracy" />
++              </div>
++
++              <div class="mb-3 col-md-4">
++                <label for="qsv_avbr_convergence" class="form-label">{{ $t('config.qsv_avbr_convergence') }}</label>
++                <input type="number" min="0" class="form-control" id="qsv_avbr_convergence"
++                       placeholder="0" v-model="config.qsv_avbr_convergence" />
++              </div>
++            </div>
++          </div>
++        </div>
++      </div>
++    </div>
++
+     <!-- Accordion for advanced QSV encoder settings -->
+     <div class="mb-3 accordion">
+       <div class="accordion-item">
+@@ -56,87 +262,277 @@
+ 
+         <div id="qsv-advanced-options" class="accordion-collapse collapse">
+           <div class="accordion-body">
+-
+             <div class="mb-3">
+               <label for="qsv_async_depth" class="form-label">{{ $t('config.qsv_async_depth') }}</label>
+               <input type="number" min="1" max="16" class="form-control" id="qsv_async_depth"
+-                    placeholder="1" v-model="config.qsv_async_depth" />
++                     placeholder="1" v-model="config.qsv_async_depth" />
+               <div class="form-text">{{ $t('config.qsv_async_depth_desc') }}</div>
+             </div>
+ 
+-            <div class="mb-3">
+-              <label for="qsv_low_power" class="form-label">{{ $t('config.qsv_low_power') }}</label>
+-              <select id="qsv_low_power" class="form-select" v-model="config.qsv_low_power">
+-                <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
+-                <option value="enabled">{{ $t('_common.enabled') }}</option>
+-                <option value="disabled">{{ $t('_common.disabled') }}</option>
+-              </select>
++            <div class="row">
++              <div class="mb-3 col-md-6">
++                <label for="qsv_low_power" class="form-label">{{ $t('config.qsv_low_power') }}</label>
++                <select id="qsv_low_power" class="form-select" v-model="config.qsv_low_power">
++                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
++                  <option value="enabled">{{ $t('_common.enabled') }}</option>
++                  <option value="disabled">{{ $t('_common.disabled') }}</option>
++                </select>
++              </div>
++
++              <div class="mb-3 col-md-6">
++                <label for="qsv_low_delay_brc" class="form-label">{{ $t('config.qsv_low_delay_brc') }}</label>
++                <select id="qsv_low_delay_brc" class="form-select" v-model="config.qsv_low_delay_brc">
++                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
++                  <option value="enabled">{{ $t('_common.enabled') }}</option>
++                  <option value="disabled">{{ $t('_common.disabled') }}</option>
++                </select>
++              </div>
+             </div>
+ 
+-            <div class="mb-3">
+-              <label for="qsv_low_delay_brc" class="form-label">{{ $t('config.qsv_low_delay_brc') }}</label>
+-              <select id="qsv_low_delay_brc" class="form-select" v-model="config.qsv_low_delay_brc">
+-                <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
+-                <option value="enabled">{{ $t('_common.enabled') }}</option>
+-                <option value="disabled">{{ $t('_common.disabled') }}</option>
+-              </select>
++            <div class="row">
++              <div class="mb-3 col-md-6">
++                <label for="qsv_extbrc" class="form-label">{{ $t('config.qsv_extbrc') }}</label>
++                <select id="qsv_extbrc" class="form-select" v-model="config.qsv_extbrc">
++                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
++                  <option value="enabled">{{ $t('_common.enabled') }}</option>
++                  <option value="disabled">{{ $t('_common.disabled') }}</option>
++                </select>
++              </div>
++
++              <div class="mb-3 col-md-6">
++                <label for="qsv_look_ahead" class="form-label">{{ $t('config.qsv_look_ahead') }}</label>
++                <select id="qsv_look_ahead" class="form-select" v-model="config.qsv_look_ahead">
++                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
++                  <option value="enabled">{{ $t('_common.enabled') }}</option>
++                  <option value="disabled">{{ $t('_common.disabled') }}</option>
++                </select>
++              </div>
+             </div>
+ 
+-            <div class="mb-3">
+-              <label for="qsv_extbrc" class="form-label">{{ $t('config.qsv_extbrc') }}</label>
+-              <select id="qsv_extbrc" class="form-select" v-model="config.qsv_extbrc">
+-                <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
+-                <option value="enabled">{{ $t('_common.enabled') }}</option>
+-                <option value="disabled">{{ $t('_common.disabled') }}</option>
+-              </select>
++            <div class="row">
++              <div class="mb-3 col-md-6">
++                <label for="qsv_look_ahead_depth" class="form-label">{{ $t('config.qsv_look_ahead_depth') }}</label>
++                <input type="number" min="0" max="100" class="form-control" id="qsv_look_ahead_depth"
++                       placeholder="0" v-model="config.qsv_look_ahead_depth" />
++              </div>
++
++              <div class="mb-3 col-md-6">
++                <label for="qsv_look_ahead_downsampling" class="form-label">{{ $t('config.qsv_look_ahead_downsampling') }}</label>
++                <select id="qsv_look_ahead_downsampling" class="form-select" v-model="config.qsv_look_ahead_downsampling">
++                  <option value="">{{ $t('config.ffmpeg_auto') }}</option>
++                  <option value="auto">auto</option>
++                  <option value="off">off</option>
++                  <option value="2x">2x</option>
++                  <option value="4x">4x</option>
++                </select>
++              </div>
+             </div>
+ 
+-            <div class="mb-3">
+-              <label for="qsv_look_ahead" class="form-label">{{ $t('config.qsv_look_ahead') }}</label>
+-              <select id="qsv_look_ahead" class="form-select" v-model="config.qsv_look_ahead">
+-                <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
+-                <option value="enabled">{{ $t('_common.enabled') }}</option>
+-                <option value="disabled">{{ $t('_common.disabled') }}</option>
+-              </select>
++            <div class="row">
++              <div class="mb-3 col-md-4">
++                <label for="qsv_mbbrc" class="form-label">{{ $t('config.qsv_mbbrc') }}</label>
++                <select id="qsv_mbbrc" class="form-select" v-model="config.qsv_mbbrc">
++                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
++                  <option value="enabled">{{ $t('_common.enabled') }}</option>
++                  <option value="disabled">{{ $t('_common.disabled') }}</option>
++                </select>
++              </div>
++
++              <div class="mb-3 col-md-4">
++                <label for="qsv_adaptive_i" class="form-label">{{ $t('config.qsv_adaptive_i') }}</label>
++                <select id="qsv_adaptive_i" class="form-select" v-model="config.qsv_adaptive_i">
++                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
++                  <option value="enabled">{{ $t('_common.enabled') }}</option>
++                  <option value="disabled">{{ $t('_common.disabled') }}</option>
++                </select>
++              </div>
++
++              <div class="mb-3 col-md-4">
++                <label for="qsv_adaptive_b" class="form-label">{{ $t('config.qsv_adaptive_b') }}</label>
++                <select id="qsv_adaptive_b" class="form-select" v-model="config.qsv_adaptive_b">
++                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
++                  <option value="enabled">{{ $t('_common.enabled') }}</option>
++                  <option value="disabled">{{ $t('_common.disabled') }}</option>
++                </select>
++              </div>
+             </div>
+ 
+-            <div class="mb-3">
+-              <label for="qsv_look_ahead_depth" class="form-label">{{ $t('config.qsv_look_ahead_depth') }}</label>
+-              <input type="number" min="0" max="100" class="form-control" id="qsv_look_ahead_depth"
+-                    placeholder="0" v-model="config.qsv_look_ahead_depth" />
++            <hr />
++
++            <div class="row">
++              <div class="mb-3 col-md-4">
++                <label for="qsv_max_frame_size" class="form-label">{{ $t('config.qsv_max_frame_size') }}</label>
++                <input type="number" min="0" class="form-control" id="qsv_max_frame_size" placeholder="0" v-model="config.qsv_max_frame_size" />
++              </div>
++              <div class="mb-3 col-md-4">
++                <label for="qsv_max_frame_size_i" class="form-label">{{ $t('config.qsv_max_frame_size_i') }}</label>
++                <input type="number" min="0" class="form-control" id="qsv_max_frame_size_i" placeholder="0" v-model="config.qsv_max_frame_size_i" />
++              </div>
++              <div class="mb-3 col-md-4">
++                <label for="qsv_max_frame_size_p" class="form-label">{{ $t('config.qsv_max_frame_size_p') }}</label>
++                <input type="number" min="0" class="form-control" id="qsv_max_frame_size_p" placeholder="0" v-model="config.qsv_max_frame_size_p" />
++              </div>
+             </div>
+ 
+-            <div class="mb-3">
+-              <label for="qsv_mbbrc" class="form-label">{{ $t('config.qsv_mbbrc') }}</label>
+-              <select id="qsv_mbbrc" class="form-select" v-model="config.qsv_mbbrc">
+-                <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
+-                <option value="enabled">{{ $t('_common.enabled') }}</option>
+-                <option value="disabled">{{ $t('_common.disabled') }}</option>
+-              </select>
++            <div class="row">
++              <div class="mb-3 col-md-3">
++                <label for="qsv_qmin" class="form-label">{{ $t('config.qsv_qmin') }}</label>
++                <input type="number" min="0" max="255" class="form-control" id="qsv_qmin" placeholder="0" v-model="config.qsv_qmin" />
++              </div>
++              <div class="mb-3 col-md-3">
++                <label for="qsv_qmax" class="form-label">{{ $t('config.qsv_qmax') }}</label>
++                <input type="number" min="0" max="255" class="form-control" id="qsv_qmax" placeholder="0" v-model="config.qsv_qmax" />
++              </div>
++              <div class="mb-3 col-md-3">
++                <label for="qsv_min_qp_i" class="form-label">{{ $t('config.qsv_min_qp_i') }}</label>
++                <input type="number" min="0" max="255" class="form-control" id="qsv_min_qp_i" placeholder="0" v-model="config.qsv_min_qp_i" />
++              </div>
++              <div class="mb-3 col-md-3">
++                <label for="qsv_max_qp_i" class="form-label">{{ $t('config.qsv_max_qp_i') }}</label>
++                <input type="number" min="0" max="255" class="form-control" id="qsv_max_qp_i" placeholder="0" v-model="config.qsv_max_qp_i" />
++              </div>
+             </div>
+ 
+-            <div class="mb-3">
+-              <label for="qsv_adaptive_i" class="form-label">{{ $t('config.qsv_adaptive_i') }}</label>
+-              <select id="qsv_adaptive_i" class="form-select" v-model="config.qsv_adaptive_i">
+-                <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
+-                <option value="enabled">{{ $t('_common.enabled') }}</option>
+-                <option value="disabled">{{ $t('_common.disabled') }}</option>
+-              </select>
++            <div class="row">
++              <div class="mb-3 col-md-3">
++                <label for="qsv_min_qp_p" class="form-label">{{ $t('config.qsv_min_qp_p') }}</label>
++                <input type="number" min="0" max="255" class="form-control" id="qsv_min_qp_p" placeholder="0" v-model="config.qsv_min_qp_p" />
++              </div>
++              <div class="mb-3 col-md-3">
++                <label for="qsv_max_qp_p" class="form-label">{{ $t('config.qsv_max_qp_p') }}</label>
++                <input type="number" min="0" max="255" class="form-control" id="qsv_max_qp_p" placeholder="0" v-model="config.qsv_max_qp_p" />
++              </div>
++              <div class="mb-3 col-md-3">
++                <label for="qsv_min_qp_b" class="form-label">{{ $t('config.qsv_min_qp_b') }}</label>
++                <input type="number" min="0" max="255" class="form-control" id="qsv_min_qp_b" placeholder="0" v-model="config.qsv_min_qp_b" />
++              </div>
++              <div class="mb-3 col-md-3">
++                <label for="qsv_max_qp_b" class="form-label">{{ $t('config.qsv_max_qp_b') }}</label>
++                <input type="number" min="0" max="255" class="form-control" id="qsv_max_qp_b" placeholder="0" v-model="config.qsv_max_qp_b" />
++              </div>
++            </div>
++
++            <div class="row">
++              <div class="mb-3 col-md-4">
++                <label for="qsv_bitrate_limit" class="form-label">{{ $t('config.qsv_bitrate_limit') }}</label>
++                <select id="qsv_bitrate_limit" class="form-select" v-model="config.qsv_bitrate_limit">
++                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
++                  <option value="enabled">{{ $t('_common.enabled') }}</option>
++                  <option value="disabled">{{ $t('_common.disabled') }}</option>
++                </select>
++              </div>
++              <div class="mb-3 col-md-4">
++                <label for="qsv_rdo" class="form-label">{{ $t('config.qsv_rdo') }}</label>
++                <select id="qsv_rdo" class="form-select" v-model="config.qsv_rdo">
++                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
++                  <option value="enabled">{{ $t('_common.enabled') }}</option>
++                  <option value="disabled">{{ $t('_common.disabled') }}</option>
++                </select>
++              </div>
++              <div class="mb-3 col-md-4">
++                <label for="qsv_b_strategy" class="form-label">{{ $t('config.qsv_b_strategy') }}</label>
++                <select id="qsv_b_strategy" class="form-select" v-model="config.qsv_b_strategy">
++                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
++                  <option value="enabled">{{ $t('_common.enabled') }}</option>
++                  <option value="disabled">{{ $t('_common.disabled') }}</option>
++                </select>
++              </div>
++            </div>
++
++            <div class="row">
++              <div class="mb-3 col-md-3">
++                <label for="qsv_p_strategy" class="form-label">{{ $t('config.qsv_p_strategy') }}</label>
++                <input type="number" min="0" max="2" class="form-control" id="qsv_p_strategy" placeholder="0" v-model="config.qsv_p_strategy" />
++              </div>
++              <div class="mb-3 col-md-3">
++                <label for="qsv_dblk_idc" class="form-label">{{ $t('config.qsv_dblk_idc') }}</label>
++                <input type="number" min="0" max="2" class="form-control" id="qsv_dblk_idc" placeholder="0" v-model="config.qsv_dblk_idc" />
++              </div>
++              <div class="mb-3 col-md-3">
++                <label for="qsv_idr_interval" class="form-label">{{ $t('config.qsv_idr_interval') }}</label>
++                <input type="number" min="0" class="form-control" id="qsv_idr_interval" placeholder="0" v-model="config.qsv_idr_interval" />
++              </div>
++              <div class="mb-3 col-md-3">
++                <label for="qsv_gpb" class="form-label">{{ $t('config.qsv_gpb') }}</label>
++                <select id="qsv_gpb" class="form-select" v-model="config.qsv_gpb">
++                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
++                  <option value="enabled">{{ $t('_common.enabled') }}</option>
++                  <option value="disabled">{{ $t('_common.disabled') }}</option>
++                </select>
++              </div>
++            </div>
++
++            <div class="row">
++              <div class="mb-3 col-md-3">
++                <label for="qsv_aud" class="form-label">{{ $t('config.qsv_aud') }}</label>
++                <select id="qsv_aud" class="form-select" v-model="config.qsv_aud">
++                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
++                  <option value="enabled">{{ $t('_common.enabled') }}</option>
++                  <option value="disabled">{{ $t('_common.disabled') }}</option>
++                </select>
++              </div>
++              <div class="mb-3 col-md-3">
++                <label for="qsv_repeat_pps" class="form-label">{{ $t('config.qsv_repeat_pps') }}</label>
++                <select id="qsv_repeat_pps" class="form-select" v-model="config.qsv_repeat_pps">
++                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
++                  <option value="enabled">{{ $t('_common.enabled') }}</option>
++                  <option value="disabled">{{ $t('_common.disabled') }}</option>
++                </select>
++              </div>
++              <div class="mb-3 col-md-3">
++                <label for="qsv_tile_cols" class="form-label">{{ $t('config.qsv_tile_cols') }}</label>
++                <input type="number" min="0" class="form-control" id="qsv_tile_cols" placeholder="0" v-model="config.qsv_tile_cols" />
++              </div>
++              <div class="mb-3 col-md-3">
++                <label for="qsv_tile_rows" class="form-label">{{ $t('config.qsv_tile_rows') }}</label>
++                <input type="number" min="0" class="form-control" id="qsv_tile_rows" placeholder="0" v-model="config.qsv_tile_rows" />
++              </div>
++            </div>
++
++            <div class="row">
++              <div class="mb-3 col-md-3">
++                <label for="qsv_int_ref_type" class="form-label">{{ $t('config.qsv_int_ref_type') }}</label>
++                <select id="qsv_int_ref_type" class="form-select" v-model="config.qsv_int_ref_type">
++                  <option value="">{{ $t('config.ffmpeg_auto') }}</option>
++                  <option value="none">none</option>
++                  <option value="vertical">vertical</option>
++                  <option value="horizontal">horizontal</option>
++                  <option value="slice">slice</option>
++                </select>
++              </div>
++              <div class="mb-3 col-md-3">
++                <label for="qsv_int_ref_cycle_size" class="form-label">{{ $t('config.qsv_int_ref_cycle_size') }}</label>
++                <input type="number" min="0" class="form-control" id="qsv_int_ref_cycle_size" placeholder="0" v-model="config.qsv_int_ref_cycle_size" />
++              </div>
++              <div class="mb-3 col-md-3">
++                <label for="qsv_int_ref_qp_delta" class="form-label">{{ $t('config.qsv_int_ref_qp_delta') }}</label>
++                <input type="number" min="-75" max="75" class="form-control" id="qsv_int_ref_qp_delta" placeholder="0" v-model="config.qsv_int_ref_qp_delta" />
++              </div>
++              <div class="mb-3 col-md-3">
++                <label for="qsv_int_ref_cycle_dist" class="form-label">{{ $t('config.qsv_int_ref_cycle_dist') }}</label>
++                <input type="number" min="0" class="form-control" id="qsv_int_ref_cycle_dist" placeholder="0" v-model="config.qsv_int_ref_cycle_dist" />
++              </div>
+             </div>
+ 
+             <div class="mb-3">
+-              <label for="qsv_adaptive_b" class="form-label">{{ $t('config.qsv_adaptive_b') }}</label>
+-              <select id="qsv_adaptive_b" class="form-select" v-model="config.qsv_adaptive_b">
+-                <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
+-                <option value="enabled">{{ $t('_common.enabled') }}</option>
+-                <option value="disabled">{{ $t('_common.disabled') }}</option>
++              <label for="qsv_scenario" class="form-label">{{ $t('config.qsv_scenario') }}</label>
++              <select id="qsv_scenario" class="form-select" v-model="config.qsv_scenario">
++                <option value="">{{ $t('config.ffmpeg_auto') }}</option>
++                <option value="unknown">unknown</option>
++                <option value="displayremoting">displayremoting</option>
++                <option value="videoconference">videoconference</option>
++                <option value="archive">archive</option>
++                <option value="livestreaming">livestreaming</option>
++                <option value="cameracapture">cameracapture</option>
++                <option value="videosurveillance">videosurveillance</option>
++                <option value="gamestreaming">gamestreaming</option>
++                <option value="remotegaming">remotegaming</option>
+               </select>
+             </div>
+-
+           </div>
+         </div>
+       </div>
+-    </div>    
++    </div>
+   </div>
+ </template>
+ 
+diff -ruN a/src_assets/common/assets/web/public/assets/locale/en.json b/src_assets/common/assets/web/public/assets/locale/en.json
+--- a/src_assets/common/assets/web/public/assets/locale/en.json	2026-04-25 16:38:07.000000000 +0000
++++ b/src_assets/common/assets/web/public/assets/locale/en.json	2026-04-29 16:52:17.974236243 +0000
+@@ -385,7 +385,52 @@
+     "wan_encryption_mode": "WAN Encryption Mode",
+     "wan_encryption_mode_1": "Enabled for supported clients (default)",
+     "wan_encryption_mode_2": "Required for all clients",
+-    "wan_encryption_mode_desc": "This determines when encryption will be used when streaming over the Internet. Encryption can reduce streaming performance, particularly on less powerful hosts and clients."
++    "wan_encryption_mode_desc": "This determines when encryption will be used when streaming over the Internet. Encryption can reduce streaming performance, particularly on less powerful hosts and clients.",
++    "qsv_rate_control_options": "QuickSync Rate Control Inputs",
++    "qsv_predicted_rate_control": "Predicted FFmpeg QSV rate control",
++    "qsv_bitrate": "QSV Bitrate Override (kbit/s)",
++    "qsv_bitrate_desc": "Overrides Sunshine's stream bitrate for QSV. Empty uses the stream bitrate. 0 clears bit_rate.",
++    "qsv_max_bitrate": "QSV Max Bitrate Override (kbit/s)",
++    "qsv_max_bitrate_desc": "Overrides maxrate for QSV. Empty uses Sunshine's default. 0 disables maxrate, which enables ICQ/AVBR combinations.",
++    "qsv_use_stream_bitrate": "use stream bitrate",
++    "qsv_global_quality": "QSV Global Quality / QP",
++    "qsv_global_quality_desc": "1-51. Lower is better. Used as ICQ/QVBR quality, or as CQP QP when qscale is enabled. 0 disables the override.",
++    "qsv_qscale": "QSV Fixed qscale flag",
++    "qsv_qscale_desc": "Enables FFmpeg's qscale flag. With Global Quality set, this requests CQP mode.",
++    "qsv_rc_buffer_size": "QSV RC Buffer Size (kbit)",
++    "qsv_rc_initial_buffer_occupancy": "QSV Initial Buffer Occupancy (kbit)",
++    "qsv_vcm": "QSV VCM (H.264)",
++    "qsv_vcm_desc": "Video conferencing mode. Auto preserves Sunshine's existing h264_qsv default; disable it to allow H.264 CBR/VBR/QVBR/ICQ selection.",
++    "qsv_avbr_accuracy": "QSV AVBR Accuracy",
++    "qsv_avbr_convergence": "QSV AVBR Convergence",
++    "qsv_max_frame_size": "QSV Max Frame Size (bytes)",
++    "qsv_max_frame_size_i": "QSV Max I-Frame Size (bytes)",
++    "qsv_max_frame_size_p": "QSV Max P-Frame Size (bytes)",
++    "qsv_qmin": "QSV qmin",
++    "qsv_qmax": "QSV qmax",
++    "qsv_min_qp_i": "QSV Min QP I",
++    "qsv_max_qp_i": "QSV Max QP I",
++    "qsv_min_qp_p": "QSV Min QP P",
++    "qsv_max_qp_p": "QSV Max QP P",
++    "qsv_min_qp_b": "QSV Min QP B",
++    "qsv_max_qp_b": "QSV Max QP B",
++    "qsv_bitrate_limit": "QSV Bitrate Limit",
++    "qsv_rdo": "QSV Rate Distortion Optimization",
++    "qsv_p_strategy": "QSV P-Pyramid Strategy",
++    "qsv_b_strategy": "QSV B-Frame Reference Strategy",
++    "qsv_dblk_idc": "QSV Deblocking IDC",
++    "qsv_idr_interval": "QSV IDR Interval",
++    "qsv_aud": "QSV Access Unit Delimiter",
++    "qsv_repeat_pps": "QSV Repeat PPS",
++    "qsv_gpb": "QSV GPB (HEVC)",
++    "qsv_tile_cols": "QSV Tile Columns",
++    "qsv_tile_rows": "QSV Tile Rows",
++    "qsv_int_ref_type": "QSV Intra Refresh Type",
++    "qsv_int_ref_cycle_size": "QSV Intra Refresh Cycle Size",
++    "qsv_int_ref_qp_delta": "QSV Intra Refresh QP Delta",
++    "qsv_int_ref_cycle_dist": "QSV Intra Refresh Cycle Distance",
++    "qsv_scenario": "QSV Scenario Hint",
++    "qsv_look_ahead_downsampling": "QSV Lookahead Downsampling"
+   },
+   "index": {
+     "description": "Sunshine is a self-hosted game stream host for Moonlight.",
