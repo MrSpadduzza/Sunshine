@@ -9,6 +9,33 @@ const props = defineProps([
 
 const config = ref(props.config)
 
+const qsvSelectDefaults = {
+  qsv_qscale: 'auto',
+  qsv_vcm: 'auto',
+  qsv_low_power: 'auto',
+  qsv_low_delay_brc: 'auto',
+  qsv_extbrc: 'auto',
+  qsv_look_ahead: 'auto',
+  qsv_look_ahead_downsampling: '',
+  qsv_mbbrc: 'auto',
+  qsv_adaptive_i: 'auto',
+  qsv_adaptive_b: 'auto',
+  qsv_bitrate_limit: 'auto',
+  qsv_rdo: 'auto',
+  qsv_b_strategy: 'auto',
+  qsv_gpb: 'auto',
+  qsv_aud: 'auto',
+  qsv_repeat_pps: 'auto',
+  qsv_int_ref_type: '',
+  qsv_scenario: '',
+}
+
+for (const [key, defaultValue] of Object.entries(qsvSelectDefaults)) {
+  if (config.value[key] === undefined || config.value[key] === null) {
+    config.value[key] = defaultValue
+  }
+}
+
 const numberOrNull = (value) => {
   if (value === undefined || value === null || value === '') {
     return null
@@ -260,274 +287,276 @@ const qsvPredictedRateControl = computed(() => {
           </button>
         </h2>
 
-        <div id="qsv-advanced-options" class="accordion-collapse collapse">
+        <div id="qsv-advanced-options" class="accordion-collapse collapse show">
           <div class="accordion-body">
-            <div class="mb-3">
-              <label for="qsv_async_depth" class="form-label">{{ $t('config.qsv_async_depth') }}</label>
-              <input type="number" min="1" max="16" class="form-control" id="qsv_async_depth"
-                     placeholder="1" v-model="config.qsv_async_depth" />
-              <div class="form-text">{{ $t('config.qsv_async_depth_desc') }}</div>
-            </div>
+            <div class="row g-4">
+              <div class="col-lg-4">
+                <div class="mb-3">
+                  <label for="qsv_async_depth" class="form-label">{{ $t('config.qsv_async_depth') }}</label>
+                  <input type="number" min="1" max="16" class="form-control" id="qsv_async_depth"
+                         placeholder="1" v-model="config.qsv_async_depth" />
+                  <div class="form-text">{{ $t('config.qsv_async_depth_desc') }}</div>
+                </div>
 
-            <div class="row">
-              <div class="mb-3 col-md-6">
-                <label for="qsv_low_power" class="form-label">{{ $t('config.qsv_low_power') }}</label>
-                <select id="qsv_low_power" class="form-select" v-model="config.qsv_low_power">
-                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
-                  <option value="enabled">{{ $t('_common.enabled') }}</option>
-                  <option value="disabled">{{ $t('_common.disabled') }}</option>
-                </select>
-              </div>
+                <div class="mb-3">
+                  <label for="qsv_look_ahead_depth" class="form-label">{{ $t('config.qsv_look_ahead_depth') }}</label>
+                  <input type="number" min="0" max="100" class="form-control" id="qsv_look_ahead_depth" placeholder="0" v-model="config.qsv_look_ahead_depth" />
+                </div>
 
-              <div class="mb-3 col-md-6">
-                <label for="qsv_low_delay_brc" class="form-label">{{ $t('config.qsv_low_delay_brc') }}</label>
-                <select id="qsv_low_delay_brc" class="form-select" v-model="config.qsv_low_delay_brc">
-                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
-                  <option value="enabled">{{ $t('_common.enabled') }}</option>
-                  <option value="disabled">{{ $t('_common.disabled') }}</option>
-                </select>
-              </div>
-            </div>
+                <div class="mb-3">
+                  <label for="qsv_max_frame_size" class="form-label">{{ $t('config.qsv_max_frame_size') }}</label>
+                  <input type="number" min="0" class="form-control" id="qsv_max_frame_size" placeholder="0" v-model="config.qsv_max_frame_size" />
+                </div>
 
-            <div class="row">
-              <div class="mb-3 col-md-6">
-                <label for="qsv_extbrc" class="form-label">{{ $t('config.qsv_extbrc') }}</label>
-                <select id="qsv_extbrc" class="form-select" v-model="config.qsv_extbrc">
-                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
-                  <option value="enabled">{{ $t('_common.enabled') }}</option>
-                  <option value="disabled">{{ $t('_common.disabled') }}</option>
-                </select>
-              </div>
+                <div class="mb-3">
+                  <label for="qsv_max_frame_size_i" class="form-label">{{ $t('config.qsv_max_frame_size_i') }}</label>
+                  <input type="number" min="0" class="form-control" id="qsv_max_frame_size_i" placeholder="0" v-model="config.qsv_max_frame_size_i" />
+                </div>
 
-              <div class="mb-3 col-md-6">
-                <label for="qsv_look_ahead" class="form-label">{{ $t('config.qsv_look_ahead') }}</label>
-                <select id="qsv_look_ahead" class="form-select" v-model="config.qsv_look_ahead">
-                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
-                  <option value="enabled">{{ $t('_common.enabled') }}</option>
-                  <option value="disabled">{{ $t('_common.disabled') }}</option>
-                </select>
-              </div>
-            </div>
+                <div class="mb-3">
+                  <label for="qsv_max_frame_size_p" class="form-label">{{ $t('config.qsv_max_frame_size_p') }}</label>
+                  <input type="number" min="0" class="form-control" id="qsv_max_frame_size_p" placeholder="0" v-model="config.qsv_max_frame_size_p" />
+                </div>
 
-            <div class="row">
-              <div class="mb-3 col-md-6">
-                <label for="qsv_look_ahead_depth" class="form-label">{{ $t('config.qsv_look_ahead_depth') }}</label>
-                <input type="number" min="0" max="100" class="form-control" id="qsv_look_ahead_depth"
-                       placeholder="0" v-model="config.qsv_look_ahead_depth" />
-              </div>
+                <div class="mb-3">
+                  <label for="qsv_qmin" class="form-label">{{ $t('config.qsv_qmin') }}</label>
+                  <input type="number" min="0" max="255" class="form-control" id="qsv_qmin" placeholder="0" v-model="config.qsv_qmin" />
+                </div>
 
-              <div class="mb-3 col-md-6">
-                <label for="qsv_look_ahead_downsampling" class="form-label">{{ $t('config.qsv_look_ahead_downsampling') }}</label>
-                <select id="qsv_look_ahead_downsampling" class="form-select" v-model="config.qsv_look_ahead_downsampling">
-                  <option value="">{{ $t('config.ffmpeg_auto') }}</option>
-                  <option value="auto">auto</option>
-                  <option value="off">off</option>
-                  <option value="2x">2x</option>
-                  <option value="4x">4x</option>
-                </select>
-              </div>
-            </div>
+                <div class="mb-3">
+                  <label for="qsv_qmax" class="form-label">{{ $t('config.qsv_qmax') }}</label>
+                  <input type="number" min="0" max="255" class="form-control" id="qsv_qmax" placeholder="0" v-model="config.qsv_qmax" />
+                </div>
 
-            <div class="row">
-              <div class="mb-3 col-md-4">
-                <label for="qsv_mbbrc" class="form-label">{{ $t('config.qsv_mbbrc') }}</label>
-                <select id="qsv_mbbrc" class="form-select" v-model="config.qsv_mbbrc">
-                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
-                  <option value="enabled">{{ $t('_common.enabled') }}</option>
-                  <option value="disabled">{{ $t('_common.disabled') }}</option>
-                </select>
+                <div class="mb-3">
+                  <label for="qsv_min_qp_i" class="form-label">{{ $t('config.qsv_min_qp_i') }}</label>
+                  <input type="number" min="0" max="255" class="form-control" id="qsv_min_qp_i" placeholder="0" v-model="config.qsv_min_qp_i" />
+                </div>
+
+                <div class="mb-3">
+                  <label for="qsv_max_qp_i" class="form-label">{{ $t('config.qsv_max_qp_i') }}</label>
+                  <input type="number" min="0" max="255" class="form-control" id="qsv_max_qp_i" placeholder="0" v-model="config.qsv_max_qp_i" />
+                </div>
+
+                <div class="mb-3">
+                  <label for="qsv_min_qp_p" class="form-label">{{ $t('config.qsv_min_qp_p') }}</label>
+                  <input type="number" min="0" max="255" class="form-control" id="qsv_min_qp_p" placeholder="0" v-model="config.qsv_min_qp_p" />
+                </div>
               </div>
 
-              <div class="mb-3 col-md-4">
-                <label for="qsv_adaptive_i" class="form-label">{{ $t('config.qsv_adaptive_i') }}</label>
-                <select id="qsv_adaptive_i" class="form-select" v-model="config.qsv_adaptive_i">
-                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
-                  <option value="enabled">{{ $t('_common.enabled') }}</option>
-                  <option value="disabled">{{ $t('_common.disabled') }}</option>
-                </select>
+              <div class="col-lg-4">
+                <div class="mb-3">
+                  <label for="qsv_max_qp_p" class="form-label">{{ $t('config.qsv_max_qp_p') }}</label>
+                  <input type="number" min="0" max="255" class="form-control" id="qsv_max_qp_p" placeholder="0" v-model="config.qsv_max_qp_p" />
+                </div>
+
+                <div class="mb-3">
+                  <label for="qsv_min_qp_b" class="form-label">{{ $t('config.qsv_min_qp_b') }}</label>
+                  <input type="number" min="0" max="255" class="form-control" id="qsv_min_qp_b" placeholder="0" v-model="config.qsv_min_qp_b" />
+                </div>
+
+                <div class="mb-3">
+                  <label for="qsv_max_qp_b" class="form-label">{{ $t('config.qsv_max_qp_b') }}</label>
+                  <input type="number" min="0" max="255" class="form-control" id="qsv_max_qp_b" placeholder="0" v-model="config.qsv_max_qp_b" />
+                </div>
+
+                <div class="mb-3">
+                  <label for="qsv_p_strategy" class="form-label">{{ $t('config.qsv_p_strategy') }}</label>
+                  <input type="number" min="0" max="2" class="form-control" id="qsv_p_strategy" placeholder="0" v-model="config.qsv_p_strategy" />
+                </div>
+
+                <div class="mb-3">
+                  <label for="qsv_dblk_idc" class="form-label">{{ $t('config.qsv_dblk_idc') }}</label>
+                  <input type="number" min="0" max="2" class="form-control" id="qsv_dblk_idc" placeholder="0" v-model="config.qsv_dblk_idc" />
+                </div>
+
+                <div class="mb-3">
+                  <label for="qsv_idr_interval" class="form-label">{{ $t('config.qsv_idr_interval') }}</label>
+                  <input type="number" min="0" class="form-control" id="qsv_idr_interval" placeholder="0" v-model="config.qsv_idr_interval" />
+                </div>
+
+                <div class="mb-3">
+                  <label for="qsv_tile_cols" class="form-label">{{ $t('config.qsv_tile_cols') }}</label>
+                  <input type="number" min="0" class="form-control" id="qsv_tile_cols" placeholder="0" v-model="config.qsv_tile_cols" />
+                </div>
+
+                <div class="mb-3">
+                  <label for="qsv_tile_rows" class="form-label">{{ $t('config.qsv_tile_rows') }}</label>
+                  <input type="number" min="0" class="form-control" id="qsv_tile_rows" placeholder="0" v-model="config.qsv_tile_rows" />
+                </div>
+
+                <div class="mb-3">
+                  <label for="qsv_int_ref_cycle_size" class="form-label">{{ $t('config.qsv_int_ref_cycle_size') }}</label>
+                  <input type="number" min="0" class="form-control" id="qsv_int_ref_cycle_size" placeholder="0" v-model="config.qsv_int_ref_cycle_size" />
+                </div>
+
+                <div class="mb-3">
+                  <label for="qsv_int_ref_qp_delta" class="form-label">{{ $t('config.qsv_int_ref_qp_delta') }}</label>
+                  <input type="number" min="-75" max="75" class="form-control" id="qsv_int_ref_qp_delta" placeholder="0" v-model="config.qsv_int_ref_qp_delta" />
+                </div>
+
+                <div class="mb-3">
+                  <label for="qsv_int_ref_cycle_dist" class="form-label">{{ $t('config.qsv_int_ref_cycle_dist') }}</label>
+                  <input type="number" min="0" class="form-control" id="qsv_int_ref_cycle_dist" placeholder="0" v-model="config.qsv_int_ref_cycle_dist" />
+                </div>
               </div>
 
-              <div class="mb-3 col-md-4">
-                <label for="qsv_adaptive_b" class="form-label">{{ $t('config.qsv_adaptive_b') }}</label>
-                <select id="qsv_adaptive_b" class="form-select" v-model="config.qsv_adaptive_b">
-                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
-                  <option value="enabled">{{ $t('_common.enabled') }}</option>
-                  <option value="disabled">{{ $t('_common.disabled') }}</option>
-                </select>
-              </div>
-            </div>
+              <div class="col-lg-4">
+                <div class="mb-3">
+                  <label for="qsv_low_power" class="form-label">{{ $t('config.qsv_low_power') }}</label>
+                  <select id="qsv_low_power" class="form-select" v-model="config.qsv_low_power">
+                    <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
+                    <option value="enabled">{{ $t('_common.enabled') }}</option>
+                    <option value="disabled">{{ $t('_common.disabled') }}</option>
+                  </select>
+                </div>
 
-            <hr />
+                <div class="mb-3">
+                  <label for="qsv_low_delay_brc" class="form-label">{{ $t('config.qsv_low_delay_brc') }}</label>
+                  <select id="qsv_low_delay_brc" class="form-select" v-model="config.qsv_low_delay_brc">
+                    <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
+                    <option value="enabled">{{ $t('_common.enabled') }}</option>
+                    <option value="disabled">{{ $t('_common.disabled') }}</option>
+                  </select>
+                </div>
 
-            <div class="row">
-              <div class="mb-3 col-md-4">
-                <label for="qsv_max_frame_size" class="form-label">{{ $t('config.qsv_max_frame_size') }}</label>
-                <input type="number" min="0" class="form-control" id="qsv_max_frame_size" placeholder="0" v-model="config.qsv_max_frame_size" />
-              </div>
-              <div class="mb-3 col-md-4">
-                <label for="qsv_max_frame_size_i" class="form-label">{{ $t('config.qsv_max_frame_size_i') }}</label>
-                <input type="number" min="0" class="form-control" id="qsv_max_frame_size_i" placeholder="0" v-model="config.qsv_max_frame_size_i" />
-              </div>
-              <div class="mb-3 col-md-4">
-                <label for="qsv_max_frame_size_p" class="form-label">{{ $t('config.qsv_max_frame_size_p') }}</label>
-                <input type="number" min="0" class="form-control" id="qsv_max_frame_size_p" placeholder="0" v-model="config.qsv_max_frame_size_p" />
-              </div>
-            </div>
+                <div class="mb-3">
+                  <label for="qsv_extbrc" class="form-label">{{ $t('config.qsv_extbrc') }}</label>
+                  <select id="qsv_extbrc" class="form-select" v-model="config.qsv_extbrc">
+                    <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
+                    <option value="enabled">{{ $t('_common.enabled') }}</option>
+                    <option value="disabled">{{ $t('_common.disabled') }}</option>
+                  </select>
+                </div>
 
-            <div class="row">
-              <div class="mb-3 col-md-3">
-                <label for="qsv_qmin" class="form-label">{{ $t('config.qsv_qmin') }}</label>
-                <input type="number" min="0" max="255" class="form-control" id="qsv_qmin" placeholder="0" v-model="config.qsv_qmin" />
-              </div>
-              <div class="mb-3 col-md-3">
-                <label for="qsv_qmax" class="form-label">{{ $t('config.qsv_qmax') }}</label>
-                <input type="number" min="0" max="255" class="form-control" id="qsv_qmax" placeholder="0" v-model="config.qsv_qmax" />
-              </div>
-              <div class="mb-3 col-md-3">
-                <label for="qsv_min_qp_i" class="form-label">{{ $t('config.qsv_min_qp_i') }}</label>
-                <input type="number" min="0" max="255" class="form-control" id="qsv_min_qp_i" placeholder="0" v-model="config.qsv_min_qp_i" />
-              </div>
-              <div class="mb-3 col-md-3">
-                <label for="qsv_max_qp_i" class="form-label">{{ $t('config.qsv_max_qp_i') }}</label>
-                <input type="number" min="0" max="255" class="form-control" id="qsv_max_qp_i" placeholder="0" v-model="config.qsv_max_qp_i" />
-              </div>
-            </div>
+                <div class="mb-3">
+                  <label for="qsv_look_ahead" class="form-label">{{ $t('config.qsv_look_ahead') }}</label>
+                  <select id="qsv_look_ahead" class="form-select" v-model="config.qsv_look_ahead">
+                    <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
+                    <option value="enabled">{{ $t('_common.enabled') }}</option>
+                    <option value="disabled">{{ $t('_common.disabled') }}</option>
+                  </select>
+                </div>
 
-            <div class="row">
-              <div class="mb-3 col-md-3">
-                <label for="qsv_min_qp_p" class="form-label">{{ $t('config.qsv_min_qp_p') }}</label>
-                <input type="number" min="0" max="255" class="form-control" id="qsv_min_qp_p" placeholder="0" v-model="config.qsv_min_qp_p" />
-              </div>
-              <div class="mb-3 col-md-3">
-                <label for="qsv_max_qp_p" class="form-label">{{ $t('config.qsv_max_qp_p') }}</label>
-                <input type="number" min="0" max="255" class="form-control" id="qsv_max_qp_p" placeholder="0" v-model="config.qsv_max_qp_p" />
-              </div>
-              <div class="mb-3 col-md-3">
-                <label for="qsv_min_qp_b" class="form-label">{{ $t('config.qsv_min_qp_b') }}</label>
-                <input type="number" min="0" max="255" class="form-control" id="qsv_min_qp_b" placeholder="0" v-model="config.qsv_min_qp_b" />
-              </div>
-              <div class="mb-3 col-md-3">
-                <label for="qsv_max_qp_b" class="form-label">{{ $t('config.qsv_max_qp_b') }}</label>
-                <input type="number" min="0" max="255" class="form-control" id="qsv_max_qp_b" placeholder="0" v-model="config.qsv_max_qp_b" />
-              </div>
-            </div>
+                <div class="mb-3">
+                  <label for="qsv_look_ahead_downsampling" class="form-label">{{ $t('config.qsv_look_ahead_downsampling') }}</label>
+                  <select id="qsv_look_ahead_downsampling" class="form-select" v-model="config.qsv_look_ahead_downsampling">
+                    <option value="">{{ $t('config.ffmpeg_auto') }}</option>
+                    <option value="auto">auto</option>
+                    <option value="off">off</option>
+                    <option value="2x">2x</option>
+                    <option value="4x">4x</option>
+                  </select>
+                </div>
 
-            <div class="row">
-              <div class="mb-3 col-md-4">
-                <label for="qsv_bitrate_limit" class="form-label">{{ $t('config.qsv_bitrate_limit') }}</label>
-                <select id="qsv_bitrate_limit" class="form-select" v-model="config.qsv_bitrate_limit">
-                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
-                  <option value="enabled">{{ $t('_common.enabled') }}</option>
-                  <option value="disabled">{{ $t('_common.disabled') }}</option>
-                </select>
-              </div>
-              <div class="mb-3 col-md-4">
-                <label for="qsv_rdo" class="form-label">{{ $t('config.qsv_rdo') }}</label>
-                <select id="qsv_rdo" class="form-select" v-model="config.qsv_rdo">
-                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
-                  <option value="enabled">{{ $t('_common.enabled') }}</option>
-                  <option value="disabled">{{ $t('_common.disabled') }}</option>
-                </select>
-              </div>
-              <div class="mb-3 col-md-4">
-                <label for="qsv_b_strategy" class="form-label">{{ $t('config.qsv_b_strategy') }}</label>
-                <select id="qsv_b_strategy" class="form-select" v-model="config.qsv_b_strategy">
-                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
-                  <option value="enabled">{{ $t('_common.enabled') }}</option>
-                  <option value="disabled">{{ $t('_common.disabled') }}</option>
-                </select>
-              </div>
-            </div>
+                <div class="mb-3">
+                  <label for="qsv_mbbrc" class="form-label">{{ $t('config.qsv_mbbrc') }}</label>
+                  <select id="qsv_mbbrc" class="form-select" v-model="config.qsv_mbbrc">
+                    <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
+                    <option value="enabled">{{ $t('_common.enabled') }}</option>
+                    <option value="disabled">{{ $t('_common.disabled') }}</option>
+                  </select>
+                </div>
 
-            <div class="row">
-              <div class="mb-3 col-md-3">
-                <label for="qsv_p_strategy" class="form-label">{{ $t('config.qsv_p_strategy') }}</label>
-                <input type="number" min="0" max="2" class="form-control" id="qsv_p_strategy" placeholder="0" v-model="config.qsv_p_strategy" />
-              </div>
-              <div class="mb-3 col-md-3">
-                <label for="qsv_dblk_idc" class="form-label">{{ $t('config.qsv_dblk_idc') }}</label>
-                <input type="number" min="0" max="2" class="form-control" id="qsv_dblk_idc" placeholder="0" v-model="config.qsv_dblk_idc" />
-              </div>
-              <div class="mb-3 col-md-3">
-                <label for="qsv_idr_interval" class="form-label">{{ $t('config.qsv_idr_interval') }}</label>
-                <input type="number" min="0" class="form-control" id="qsv_idr_interval" placeholder="0" v-model="config.qsv_idr_interval" />
-              </div>
-              <div class="mb-3 col-md-3">
-                <label for="qsv_gpb" class="form-label">{{ $t('config.qsv_gpb') }}</label>
-                <select id="qsv_gpb" class="form-select" v-model="config.qsv_gpb">
-                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
-                  <option value="enabled">{{ $t('_common.enabled') }}</option>
-                  <option value="disabled">{{ $t('_common.disabled') }}</option>
-                </select>
-              </div>
-            </div>
+                <div class="mb-3">
+                  <label for="qsv_adaptive_i" class="form-label">{{ $t('config.qsv_adaptive_i') }}</label>
+                  <select id="qsv_adaptive_i" class="form-select" v-model="config.qsv_adaptive_i">
+                    <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
+                    <option value="enabled">{{ $t('_common.enabled') }}</option>
+                    <option value="disabled">{{ $t('_common.disabled') }}</option>
+                  </select>
+                </div>
 
-            <div class="row">
-              <div class="mb-3 col-md-3">
-                <label for="qsv_aud" class="form-label">{{ $t('config.qsv_aud') }}</label>
-                <select id="qsv_aud" class="form-select" v-model="config.qsv_aud">
-                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
-                  <option value="enabled">{{ $t('_common.enabled') }}</option>
-                  <option value="disabled">{{ $t('_common.disabled') }}</option>
-                </select>
-              </div>
-              <div class="mb-3 col-md-3">
-                <label for="qsv_repeat_pps" class="form-label">{{ $t('config.qsv_repeat_pps') }}</label>
-                <select id="qsv_repeat_pps" class="form-select" v-model="config.qsv_repeat_pps">
-                  <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
-                  <option value="enabled">{{ $t('_common.enabled') }}</option>
-                  <option value="disabled">{{ $t('_common.disabled') }}</option>
-                </select>
-              </div>
-              <div class="mb-3 col-md-3">
-                <label for="qsv_tile_cols" class="form-label">{{ $t('config.qsv_tile_cols') }}</label>
-                <input type="number" min="0" class="form-control" id="qsv_tile_cols" placeholder="0" v-model="config.qsv_tile_cols" />
-              </div>
-              <div class="mb-3 col-md-3">
-                <label for="qsv_tile_rows" class="form-label">{{ $t('config.qsv_tile_rows') }}</label>
-                <input type="number" min="0" class="form-control" id="qsv_tile_rows" placeholder="0" v-model="config.qsv_tile_rows" />
-              </div>
-            </div>
+                <div class="mb-3">
+                  <label for="qsv_adaptive_b" class="form-label">{{ $t('config.qsv_adaptive_b') }}</label>
+                  <select id="qsv_adaptive_b" class="form-select" v-model="config.qsv_adaptive_b">
+                    <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
+                    <option value="enabled">{{ $t('_common.enabled') }}</option>
+                    <option value="disabled">{{ $t('_common.disabled') }}</option>
+                  </select>
+                </div>
 
-            <div class="row">
-              <div class="mb-3 col-md-3">
-                <label for="qsv_int_ref_type" class="form-label">{{ $t('config.qsv_int_ref_type') }}</label>
-                <select id="qsv_int_ref_type" class="form-select" v-model="config.qsv_int_ref_type">
-                  <option value="">{{ $t('config.ffmpeg_auto') }}</option>
-                  <option value="none">none</option>
-                  <option value="vertical">vertical</option>
-                  <option value="horizontal">horizontal</option>
-                  <option value="slice">slice</option>
-                </select>
-              </div>
-              <div class="mb-3 col-md-3">
-                <label for="qsv_int_ref_cycle_size" class="form-label">{{ $t('config.qsv_int_ref_cycle_size') }}</label>
-                <input type="number" min="0" class="form-control" id="qsv_int_ref_cycle_size" placeholder="0" v-model="config.qsv_int_ref_cycle_size" />
-              </div>
-              <div class="mb-3 col-md-3">
-                <label for="qsv_int_ref_qp_delta" class="form-label">{{ $t('config.qsv_int_ref_qp_delta') }}</label>
-                <input type="number" min="-75" max="75" class="form-control" id="qsv_int_ref_qp_delta" placeholder="0" v-model="config.qsv_int_ref_qp_delta" />
-              </div>
-              <div class="mb-3 col-md-3">
-                <label for="qsv_int_ref_cycle_dist" class="form-label">{{ $t('config.qsv_int_ref_cycle_dist') }}</label>
-                <input type="number" min="0" class="form-control" id="qsv_int_ref_cycle_dist" placeholder="0" v-model="config.qsv_int_ref_cycle_dist" />
-              </div>
-            </div>
+                <div class="mb-3">
+                  <label for="qsv_bitrate_limit" class="form-label">{{ $t('config.qsv_bitrate_limit') }}</label>
+                  <select id="qsv_bitrate_limit" class="form-select" v-model="config.qsv_bitrate_limit">
+                    <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
+                    <option value="enabled">{{ $t('_common.enabled') }}</option>
+                    <option value="disabled">{{ $t('_common.disabled') }}</option>
+                  </select>
+                </div>
 
-            <div class="mb-3">
-              <label for="qsv_scenario" class="form-label">{{ $t('config.qsv_scenario') }}</label>
-              <select id="qsv_scenario" class="form-select" v-model="config.qsv_scenario">
-                <option value="">{{ $t('config.ffmpeg_auto') }}</option>
-                <option value="unknown">unknown</option>
-                <option value="displayremoting">displayremoting</option>
-                <option value="videoconference">videoconference</option>
-                <option value="archive">archive</option>
-                <option value="livestreaming">livestreaming</option>
-                <option value="cameracapture">cameracapture</option>
-                <option value="videosurveillance">videosurveillance</option>
-                <option value="gamestreaming">gamestreaming</option>
-                <option value="remotegaming">remotegaming</option>
-              </select>
+                <div class="mb-3">
+                  <label for="qsv_rdo" class="form-label">{{ $t('config.qsv_rdo') }}</label>
+                  <select id="qsv_rdo" class="form-select" v-model="config.qsv_rdo">
+                    <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
+                    <option value="enabled">{{ $t('_common.enabled') }}</option>
+                    <option value="disabled">{{ $t('_common.disabled') }}</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="qsv_b_strategy" class="form-label">{{ $t('config.qsv_b_strategy') }}</label>
+                  <select id="qsv_b_strategy" class="form-select" v-model="config.qsv_b_strategy">
+                    <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
+                    <option value="enabled">{{ $t('_common.enabled') }}</option>
+                    <option value="disabled">{{ $t('_common.disabled') }}</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="qsv_gpb" class="form-label">{{ $t('config.qsv_gpb') }}</label>
+                  <select id="qsv_gpb" class="form-select" v-model="config.qsv_gpb">
+                    <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
+                    <option value="enabled">{{ $t('_common.enabled') }}</option>
+                    <option value="disabled">{{ $t('_common.disabled') }}</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="qsv_aud" class="form-label">{{ $t('config.qsv_aud') }}</label>
+                  <select id="qsv_aud" class="form-select" v-model="config.qsv_aud">
+                    <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
+                    <option value="enabled">{{ $t('_common.enabled') }}</option>
+                    <option value="disabled">{{ $t('_common.disabled') }}</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="qsv_repeat_pps" class="form-label">{{ $t('config.qsv_repeat_pps') }}</label>
+                  <select id="qsv_repeat_pps" class="form-select" v-model="config.qsv_repeat_pps">
+                    <option value="auto">{{ $t('config.ffmpeg_auto') }}</option>
+                    <option value="enabled">{{ $t('_common.enabled') }}</option>
+                    <option value="disabled">{{ $t('_common.disabled') }}</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="qsv_int_ref_type" class="form-label">{{ $t('config.qsv_int_ref_type') }}</label>
+                  <select id="qsv_int_ref_type" class="form-select" v-model="config.qsv_int_ref_type">
+                    <option value="">{{ $t('config.ffmpeg_auto') }}</option>
+                    <option value="none">none</option>
+                    <option value="vertical">vertical</option>
+                    <option value="horizontal">horizontal</option>
+                    <option value="slice">slice</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="qsv_scenario" class="form-label">{{ $t('config.qsv_scenario') }}</label>
+                  <select id="qsv_scenario" class="form-select" v-model="config.qsv_scenario">
+                    <option value="">{{ $t('config.ffmpeg_auto') }}</option>
+                    <option value="unknown">unknown</option>
+                    <option value="displayremoting">displayremoting</option>
+                    <option value="videoconference">videoconference</option>
+                    <option value="archive">archive</option>
+                    <option value="livestreaming">livestreaming</option>
+                    <option value="cameracapture">cameracapture</option>
+                    <option value="videosurveillance">videosurveillance</option>
+                    <option value="gamestreaming">gamestreaming</option>
+                    <option value="remotegaming">remotegaming</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
         </div>
