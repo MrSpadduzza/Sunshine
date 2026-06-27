@@ -635,15 +635,9 @@ namespace video {
         {"low_power"s, 1},
         */
         // Replace hardcoded AV1 QSV options with config-backed options
-        {"async_depth"s, []() {
-          return config::video.qsv.qsv_async_depth.value_or(1);
-        }},
-        {"low_delay_brc"s, []() {
-          return config::video.qsv.qsv_low_delay_brc.value_or(1);
-        }},
-        {"low_power"s, []() {
-          return config::video.qsv.qsv_low_power.value_or(1);
-        }},
+        {"async_depth"s, &config::video.qsv.qsv_async_depth},
+        {"low_delay_brc"s, &config::video.qsv.qsv_low_delay_brc},
+        {"low_power"s, &config::video.qsv.qsv_low_power},
         {"extbrc"s, &config::video.qsv.qsv_extbrc},
         {"look_ahead"s, &config::video.qsv.qsv_look_ahead},
         {"look_ahead_depth"s, &config::video.qsv.qsv_look_ahead_depth},
@@ -672,7 +666,10 @@ namespace video {
         // YUV444 HDR-specific options
         {"profile"s, (int) qsv::profile_av1_e::high},
       },
-      {},  // Fallback options
+      {
+        // Fallback options
+        {"low_power"s, 0},
+      },
       "av1_qsv"s,
     },
     {
@@ -686,15 +683,9 @@ namespace video {
         {"low_power"s, 1},
         */
         // Replace hardcoded HEVC QSV options with config-backed options
-        {"async_depth"s, []() {
-          return config::video.qsv.qsv_async_depth.value_or(1);
-        }},
-        {"low_delay_brc"s, []() {
-          return config::video.qsv.qsv_low_delay_brc.value_or(1);
-        }},
-        {"low_power"s, []() {
-          return config::video.qsv.qsv_low_power.value_or(1);
-        }},
+        {"async_depth"s, &config::video.qsv.qsv_async_depth},
+        {"low_delay_brc"s, &config::video.qsv.qsv_low_delay_brc},
+        {"low_power"s, &config::video.qsv.qsv_low_power},
         {"extbrc"s, &config::video.qsv.qsv_extbrc},
         {"look_ahead"s, &config::video.qsv.qsv_look_ahead},
         {"look_ahead_depth"s, &config::video.qsv.qsv_look_ahead_depth},
@@ -775,15 +766,9 @@ namespace video {
         {"low_power"s, 1},
         */
         // Replace hardcoded H.264 QSV options with config-backed options
-        {"async_depth"s, []() {
-          return config::video.qsv.qsv_async_depth.value_or(1);
-        }},
-        {"low_delay_brc"s, []() {
-          return config::video.qsv.qsv_low_delay_brc.value_or(1);
-        }},
-        {"low_power"s, []() {
-          return config::video.qsv.qsv_low_power.value_or(1);
-        }},
+        {"async_depth"s, &config::video.qsv.qsv_async_depth},
+        {"low_delay_brc"s, &config::video.qsv.qsv_low_delay_brc},
+        {"low_power"s, &config::video.qsv.qsv_low_power},
         {"extbrc"s, &config::video.qsv.qsv_extbrc},
         {"look_ahead"s, &config::video.qsv.qsv_look_ahead},
         {"look_ahead_depth"s, &config::video.qsv.qsv_look_ahead_depth},
@@ -819,9 +804,7 @@ namespace video {
         {"repeat_pps"s, &config::video.qsv.qsv_repeat_pps},
         //        
         {"recovery_point_sei"s, 0},
-        {"vcm"s, []() {
-          return config::video.qsv.qsv_vcm.value_or(1);
-        }},
+        {"vcm"s, &config::video.qsv.qsv_vcm},
         {"pic_timing_sei"s, 0},
         {"max_dec_frame_buffering"s, 1},
       },
@@ -1857,36 +1840,69 @@ namespace video {
         // QSV chooses its rate-control mode from AVCodecContext fields, not from a
         // single private "rc" option. Keep Sunshine's stream bitrate as the default,
         // but allow advanced users to override the libavcodec primitives directly.
-        if (config::video.qsv.qsv_bitrate) {
-          ctx->bit_rate = (int64_t) *config::video.qsv.qsv_bitrate * 1000;
-        }
+        //
+        // if (config::video.qsv.qsv_bitrate) {
+        //   ctx->bit_rate = (int64_t) *config::video.qsv.qsv_bitrate * 1000;
+        // }
 
-        if (config::video.qsv.qsv_max_bitrate) {
-          ctx->rc_max_rate = (int64_t) *config::video.qsv.qsv_max_bitrate * 1000;
-        }
+        // if (config::video.qsv.qsv_max_bitrate) {
+        //   ctx->rc_max_rate = (int64_t) *config::video.qsv.qsv_max_bitrate * 1000;
+        // }
 
-        if (config::video.qsv.qsv_rc_buffer_size) {
-          ctx->rc_buffer_size = *config::video.qsv.qsv_rc_buffer_size * 1000;
-        }
+        // if (config::video.qsv.qsv_rc_buffer_size) {
+        //   ctx->rc_buffer_size = *config::video.qsv.qsv_rc_buffer_size * 1000;
+        // }
 
-        if (config::video.qsv.qsv_rc_initial_buffer_occupancy) {
-          ctx->rc_initial_buffer_occupancy = *config::video.qsv.qsv_rc_initial_buffer_occupancy * 1000;
-        }
+        // if (config::video.qsv.qsv_rc_initial_buffer_occupancy) {
+        //   ctx->rc_initial_buffer_occupancy = *config::video.qsv.qsv_rc_initial_buffer_occupancy * 1000;
+        // }
 
-        if (config::video.qsv.qsv_qscale) {
-          if (*config::video.qsv.qsv_qscale) {
+        // if (config::video.qsv.qsv_qscale) {
+        //   if (*config::video.qsv.qsv_qscale) {
+        //     ctx->flags |= AV_CODEC_FLAG_QSCALE;
+        //   } else {
+        //     ctx->flags &= ~AV_CODEC_FLAG_QSCALE;
+        //   }
+        // }
+
+        // if (config::video.qsv.qsv_global_quality) {
+        //   const int quality = *config::video.qsv.qsv_global_quality;
+        //   if (quality > 0) {
+        //     ctx->global_quality = (ctx->flags & AV_CODEC_FLAG_QSCALE) ? quality * FF_QP2LAMBDA : quality;
+        //   } else {
+        //     ctx->global_quality = 0;
+        //   }
+        // }
+        const auto qsv_bitrate = config::video.qsv.qsv_bitrate.value_or(0);
+        const auto qsv_max_bitrate = config::video.qsv.qsv_max_bitrate.value_or(0);
+        const auto qsv_global_quality = config::video.qsv.qsv_global_quality.value_or(0);
+        const auto qsv_qscale = config::video.qsv.qsv_qscale.value_or(0) == 1;
+
+        if (qsv_global_quality > 0) {
+          ctx->global_quality = qsv_qscale ? qsv_global_quality * FF_QP2LAMBDA : qsv_global_quality;
+
+          if (qsv_qscale) {
             ctx->flags |= AV_CODEC_FLAG_QSCALE;
-          } else {
-            ctx->flags &= ~AV_CODEC_FLAG_QSCALE;
-          }
-        }
 
-        if (config::video.qsv.qsv_global_quality) {
-          const int quality = *config::video.qsv.qsv_global_quality;
-          if (quality > 0) {
-            ctx->global_quality = (ctx->flags & AV_CODEC_FLAG_QSCALE) ? quality * FF_QP2LAMBDA : quality;
+            // CQP: do not also set bitrate/maxrate.
+            ctx->bit_rate = 0;
+            ctx->rc_max_rate = 0;
+          } else if (qsv_max_bitrate > 0) {
+            // QVBR: maxrate + global_quality.
+            ctx->bit_rate = 0;
+            ctx->rc_max_rate = qsv_max_bitrate;
           } else {
-            ctx->global_quality = 0;
+            // ICQ: global_quality only.
+            ctx->bit_rate = 0;
+            ctx->rc_max_rate = 0;
+          }
+        } else if (qsv_bitrate > 0) {
+          ctx->bit_rate = qsv_bitrate;
+
+          if (qsv_max_bitrate > 0) {
+            ctx->rc_max_rate = qsv_max_bitrate;
+          } else {
+            ctx->rc_max_rate = qsv_bitrate; // CBR
           }
         }
       }
