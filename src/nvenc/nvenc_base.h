@@ -104,21 +104,17 @@ namespace nvenc {
       return false;
     }
 
+    /**
+     * @brief Check whether an NVENC API status represents failure.
+     *
+     * @param status Native status code returned by the platform API.
+     * @return True when the status is an NVENC error code.
+     */
     bool nvenc_failed(NVENCSTATUS status);
 
-    /**
-     * @brief This function returns the corresponding struct version for the minimum API required by the codec.
-     * @details Reducing the struct versions maximizes driver compatibility by avoiding needless API breaks.
-     * @param version The raw structure version from `NVENCAPI_STRUCT_VERSION()`.
-     * @param v11_struct_version Optionally specifies the struct version to use with v11 SDK major versions.
-     * @param v12_struct_version Optionally specifies the struct version to use with v12 SDK major versions.
-     * @return A suitable struct version for the active codec.
-     */
-    uint32_t min_struct_version(uint32_t version, uint32_t v11_struct_version = 0, uint32_t v12_struct_version = 0);
+    const NV_ENC_DEVICE_TYPE device_type;  ///< NVENC device backend used by this encoder instance.
 
-    const NV_ENC_DEVICE_TYPE device_type;
-
-    void *encoder = nullptr;
+    void *encoder = nullptr;  ///< Opaque NVENC encoder session handle returned by the driver.
 
     struct {
       uint32_t width = 0;
@@ -126,9 +122,9 @@ namespace nvenc {
       NV_ENC_BUFFER_FORMAT buffer_format = NV_ENC_BUFFER_FORMAT_UNDEFINED;
       uint32_t ref_frames_in_dpb = 0;
       bool rfi = false;
-    } encoder_params;
+    } encoder_params;  ///< Current encoder dimensions, pixel format, and reference-frame settings.
 
-    std::string last_nvenc_error_string;
+    std::string last_nvenc_error_string;  ///< Last NVENC error string.
 
     // Derived classes set these variables
     void *device = nullptr;  ///< Platform-specific handle of encoding device.
@@ -142,7 +138,6 @@ namespace nvenc {
 
   private:
     NV_ENC_OUTPUT_PTR output_bitstream = nullptr;
-    uint32_t minimum_api_version = 0;
 
     struct {
       uint64_t last_encoded_frame_index = 0;

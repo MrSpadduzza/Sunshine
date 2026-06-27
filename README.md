@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="sunshine.png" />
+  <img src="sunshine.png"  alt="Sunshine icon"/>
   <h1 align="center">Sunshine</h1>
   <h4 align="center">Self-hosted game stream host for Moonlight.</h4>
 </div>
@@ -17,20 +17,329 @@
   <a href="https://github.com/LizardByte/Sunshine/actions/workflows/localize.yml?query=branch%3Amaster"><img src="https://img.shields.io/github/actions/workflow/status/lizardbyte/sunshine/localize.yml.svg?branch=master&label=localize%20build&logo=github&style=for-the-badge" alt="GitHub Workflow Status (localize)"></a>
   <a href="https://docs.lizardbyte.dev/projects/sunshine"><img src="https://img.shields.io/readthedocs/sunshinestream.svg?label=Docs&style=for-the-badge&logo=readthedocs" alt="Read the Docs"></a>
   <a href="https://codecov.io/gh/LizardByte/Sunshine"><img src="https://img.shields.io/codecov/c/gh/LizardByte/Sunshine?token=SMGXQ5NVMJ&style=for-the-badge&logo=codecov&label=codecov" alt="Codecov"></a>
+  <a href="https://sonarcloud.io/project/overview?id=LizardByte_Sunshine"><img src="https://img.shields.io/sonar/quality_gate/LizardByte_Sunshine?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge&logo=sonarqubecloud&label=sonarcloud" alt="SonarCloud"></a>
 </div>
 
 ## ℹ️ About
 
 Sunshine is a self-hosted game stream host for Moonlight.
-Offering low latency, cloud gaming server capabilities with support for AMD, Intel, and Nvidia GPUs for hardware
+Offering low-latency, cloud gaming server capabilities with support for AMD, Intel, and Nvidia GPUs for hardware
 encoding. Software encoding is also available. You can connect to Sunshine from any Moonlight client on a variety of
 devices. A web UI is provided to allow configuration, and client pairing, from your favorite web browser. Pair from
 the local server or any mobile device.
 
 LizardByte has the full documentation hosted on [Read the Docs](https://docs.lizardbyte.dev/projects/sunshine)
 
-* [Stable](https://docs.lizardbyte.dev/projects/sunshine/latest/)
-* [Beta](https://docs.lizardbyte.dev/projects/sunshine/master/)
+* [Stable Docs](https://docs.lizardbyte.dev/projects/sunshine/latest/)
+* [Beta Docs](https://docs.lizardbyte.dev/projects/sunshine/master/)
+
+## 🎮 Feature Compatibility
+
+<table>
+    <caption id="gamepad_emulation">Gamepad Emulation</caption>
+    <tr>
+        <th>Feature</th>
+        <th>FreeBSD</th>
+        <th>Linux</th>
+        <th>macOS</th>
+        <th>Windows</th>
+    </tr>
+    <tr>
+        <td colspan="5" align="center">
+        What type of gamepads can be emulated on the host.<br>
+        Clients may support other gamepads.
+        </td>
+    </tr>
+    <tr>
+        <td>DualShock / DS4 (PlayStation 4)</td>
+        <td>➖</td>
+        <td>➖</td>
+        <td>❌</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>DualSense / DS5 (PlayStation 5)</td>
+        <td>❌</td>
+        <td>✅</td>
+        <td>❌</td>
+        <td>❌</td>
+    </tr>
+    <tr>
+        <td>Nintendo Switch Pro</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>❌</td>
+        <td>❌</td>
+    </tr>
+    <tr>
+        <td>Xbox 360</td>
+        <td>➖</td>
+        <td>➖</td>
+        <td>❌</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>Xbox One/Series</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>❌</td>
+        <td>❌</td>
+    </tr>
+</table>
+
+<table>
+    <caption id="encoding_api">Encoding API</caption>
+    <tr>
+        <th>Encoding API</th>
+        <th>GPU Vendor</th>
+        <th>FreeBSD</th>
+        <th>Linux</th>
+        <th>macOS</th>
+        <th>Windows</th>
+    </tr>
+    <tr>
+        <td>AMF</td>
+        <td>AMD</td>
+        <td>➖</td>
+        <td>➖</td>
+        <td>➖</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>Media Foundation</td>
+        <td>Qualcomm</td>
+        <td>➖</td>
+        <td>➖</td>
+        <td>➖</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>NVENC</td>
+        <td>NVIDIA</td>
+        <td>➖</td>
+        <td>✅</td>
+        <td>➖</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>QuickSync</td>
+        <td>Intel</td>
+        <td>➖</td>
+        <td>➖</td>
+        <td>➖</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td rowspan="3">VAAPI</td>
+        <td>AMD</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>➖</td>
+        <td>➖</td>
+    </tr>
+    <tr>
+        <td>Intel</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>➖</td>
+        <td>➖</td>
+    </tr>
+    <tr>
+        <td>NVIDIA</td>
+        <td>➖</td>
+        <td>✅</td>
+        <td>➖</td>
+        <td>➖</td>
+    </tr>
+    <tr>
+        <td rowspan="2">Video Toolbox</td>
+        <td>Apple</td>
+        <td>➖</td>
+        <td>➖</td>
+        <td>✅</td>
+        <td>➖</td>
+    </tr>
+    <tr>
+        <td>Intel</td>
+        <td>➖</td>
+        <td>➖</td>
+        <td>✅</td>
+        <td>➖</td>
+    </tr>
+    <tr>
+        <td rowspan="3">Vulkan Video</td>
+        <td>AMD</td>
+        <td>🟡</td>
+        <td>✅</td>
+        <td>➖</td>
+        <td>➖</td>
+    </tr>
+    <tr>
+        <td>Intel</td>
+        <td>🟡</td>
+        <td>🟡</td>
+        <td>➖</td>
+        <td>➖</td>
+    </tr>
+    <tr>
+        <td>NVIDIA</td>
+        <td>➖</td>
+        <td>🟡</td>
+        <td>➖</td>
+        <td>➖</td>
+    </tr>
+    <tr>
+        <td>Software</td>
+        <td>Any</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+</table>
+
+<table>
+    <caption id="screen_capture">Screen Capture</caption>
+    <tr>
+        <th>Capture Method</th>
+        <th>FreeBSD</th>
+        <th>Linux</th>
+        <th>macOS</th>
+        <th>Windows</th>
+    </tr>
+    <tr>
+        <td>DXGI Desktop Duplication</td>
+        <td>➖</td>
+        <td>➖</td>
+        <td>➖</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>KMS/DRM</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>➖</td>
+        <td>➖</td>
+    </tr>
+    <tr>
+        <td>NvFBC (X11 only)</td>
+        <td>➖</td>
+        <td>✅</td>
+        <td>➖</td>
+        <td>➖</td>
+    </tr>
+    <tr>
+        <td>ScreenCaptureKit</td>
+        <td>➖</td>
+        <td>➖</td>
+        <td>✅</td>
+        <td>➖</td>
+    </tr>
+    <tr>
+        <td>Wayland (wlroots)</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>➖</td>
+        <td>➖</td>
+    </tr>
+    <tr>
+        <td>Windows.Graphics.Capture</td>
+        <td>➖</td>
+        <td>➖</td>
+        <td>➖</td>
+        <td>🟡</td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;↳ Portable</td>
+        <td>➖</td>
+        <td>➖</td>
+        <td>➖</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;↳ Service</td>
+        <td>➖</td>
+        <td>➖</td>
+        <td>➖</td>
+        <td>❌</td>
+    </tr>
+    <tr>
+        <td>X11</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>➖</td>
+        <td>➖</td>
+    </tr>
+    <tr>
+        <td>XDG Desktop Portal</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>➖</td>
+        <td>➖</td>
+    </tr>
+    <tr>
+        <td>KWin Screencast</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>➖</td>
+        <td>➖</td>
+    </tr>
+</table>
+
+<table>
+    <caption id="capture_encoding_compat">Capture → Encoding Compatibility (Linux/FreeBSD)</caption>
+    <tr>
+        <th>Capture Method</th>
+        <th>VAAPI</th>
+        <th>Vulkan Video</th>
+        <th>NVENC (CUDA)</th>
+        <th>Software</th>
+    </tr>
+    <tr>
+        <td>KMS/DRM</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>NvFBC</td>
+        <td>❌</td>
+        <td>❌</td>
+        <td>✅</td>
+        <td>❌</td>
+    </tr>
+    <tr>
+        <td>Wayland (wlroots)</td>
+        <td>✅</td>
+        <td>❌</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>X11</td>
+        <td>✅</td>
+        <td>❌</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>XDG Desktop Portal</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>KWin Screencast</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+        <td>✅</td>
+    </tr>
+</table>
+
+**Legend:** ✅ Supported | 🟡 Partial Support | ❌ Not Yet Supported | ➖ Not Applicable
 
 ## 🖥️ System Requirements
 
@@ -50,7 +359,7 @@ LizardByte has the full documentation hosted on [Read the Docs](https://docs.liz
     <tr>
         <td>
             Intel:<br>
-            &nbsp;&nbsp;Linux: VAAPI-compatible, see: <a href="https://www.intel.com/content/www/us/en/developer/articles/technical/linuxmedia-vaapi.html">VAAPI hardware support</a><br>
+            &nbsp;&nbsp;FreeBSD/Linux: VAAPI-compatible, see: <a href="https://www.intel.com/content/www/us/en/developer/articles/technical/linuxmedia-vaapi.html">VAAPI hardware support</a><br>
             &nbsp;&nbsp;Windows: Skylake or newer with QuickSync encoding support
         </td>
     </tr>
@@ -69,20 +378,23 @@ LizardByte has the full documentation hosted on [Read the Docs](https://docs.liz
         <td>4GB or more</td>
     </tr>
     <tr>
-        <td rowspan="5">OS</td>
-        <td>Windows: 10+ (Windows Server does not support virtual gamepads)</td>
-    </tr>
-    <tr>
-        <td>macOS: 14+</td>
+        <td rowspan="6">OS</td>
+        <td>FreeBSD: 14.4+</td>
     </tr>
     <tr>
         <td>Linux/Debian: 13+ (trixie)</td>
     </tr>
     <tr>
-        <td>Linux/Fedora: 41+</td>
+        <td>Linux/Fedora: 43+</td>
     </tr>
     <tr>
         <td>Linux/Ubuntu: 22.04+ (jammy)</td>
+    </tr>
+    <tr>
+        <td>macOS: 14.2+</td>
+    </tr>
+    <tr>
+        <td>Windows: 11+ (Windows Server does not support virtual gamepads)</td>
     </tr>
     <tr>
         <td rowspan="2">Network</td>
@@ -106,14 +418,14 @@ LizardByte has the full documentation hosted on [Read the Docs](https://docs.liz
     <tr>
         <td>
             Intel:<br>
-            &nbsp;&nbsp;Linux: HD Graphics 510 or higher<br>
+            &nbsp;&nbsp;FreeBSD/Linux: HD Graphics 510 or higher<br>
             &nbsp;&nbsp;Windows: Skylake or newer with QuickSync encoding support
         </td>
     </tr>
     <tr>
         <td>
             Nvidia:<br>
-            &nbsp;&nbsp;Linux: GeForce RTX 2000 series or higher<br>
+            &nbsp;&nbsp;FreeBSD/Linux: GeForce RTX 2000 series or higher<br>
             &nbsp;&nbsp;Windows: Geforce GTX 1080 or higher
         </td>
     </tr>
@@ -172,9 +484,7 @@ Our support methods are listed in our [LizardByte Docs](https://docs.lizardbyte.
 ## 💲 Sponsors and Supporters
 
 <p align="center">
-  <a href="https://app.lizardbyte.dev" aria-label="Sponsor LizardByte">
-    <img src='https://raw.githubusercontent.com/LizardByte/contributors/refs/heads/dist/sponsors.svg'/>
-  </a>
+  <img src='https://cdn.jsdelivr.net/gh/LizardByte/contributors@dist/sponsors.svg' alt="Sponsors"/>
 </p>
 
 ## 👥 Contributors
@@ -184,17 +494,13 @@ Thank you to all the contributors who have helped make Sunshine better!
 ### GitHub
 
 <p align="center">
-  <a href="https://github.com/LizardByte/Sunshine" aria-label="GitHub">
-    <img src='https://raw.githubusercontent.com/LizardByte/contributors/refs/heads/dist/github.Sunshine.svg'/>
-  </a>
+  <img src='https://cdn.jsdelivr.net/gh/LizardByte/contributors@dist/github.Sunshine.svg' alt="GitHub contributors"/>
 </p>
 
 ### CrowdIn
 
 <p align="center">
-  <a href="https://translate.lizardbyte.dev" aria-label="CrowdIn">
-    <img src='https://raw.githubusercontent.com/LizardByte/contributors/refs/heads/dist/crowdin.606145.svg'/>
-  </a>
+  <img src='https://cdn.jsdelivr.net/gh/LizardByte/contributors@dist/crowdin.606145.svg' alt="CrowdIn contributors"/>
 </p>
 
 <div class="section_buttons">

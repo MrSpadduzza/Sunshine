@@ -126,7 +126,7 @@ namespace display_device {
       if (result > std::numeric_limits<unsigned int>::max()) {
         throw std::out_of_range("stou");
       }
-      return result;
+      return (int) result;
     }
 
     /**
@@ -456,7 +456,7 @@ namespace display_device {
     }
 
     /**
-     * @brief Contains remapping data parsed from the string values.
+     * @brief Enumerates supported contains remapping data parsed from the string options.
      */
     struct parsed_remapping_entry_t {
       std::optional<Resolution> requested_resolution;
@@ -655,7 +655,7 @@ namespace display_device {
         scheduler_option.m_execution = SchedulerOptions::Execution::ScheduledOnly;
       }
 
-      DD_DATA.sm_instance->schedule([try_once = (option == revert_option_e::try_once), tried_out_devices = std::set<std::string> {}](auto &settings_iface, auto &stop_token) mutable {
+      DD_DATA.sm_instance->schedule([try_once = (option == revert_option_e::try_once), tried_out_devices = StringSet {}](auto &settings_iface, auto &stop_token) mutable {
         if (try_once) {
           std::ignore = settings_iface.revertSettings();
           stop_token.requestStop();
@@ -664,7 +664,7 @@ namespace display_device {
 
         auto available_devices {[&settings_iface]() {
           const auto devices {settings_iface.enumAvailableDevices()};
-          std::set<std::string> parsed_devices;
+          StringSet parsed_devices;
 
           std::transform(
             std::begin(devices),

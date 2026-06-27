@@ -17,6 +17,7 @@
 #include <boost/program_options/parsers.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
+#include <boost/token_functions.hpp>
 #include <openssl/evp.h>
 #include <openssl/sha.h>
 
@@ -32,22 +33,26 @@
 
 #ifdef _WIN32
   // from_utf8() string conversion function
-  #include "platform/windows/misc.h"
+  #include "platform/windows/utf_utils.h"
 
   // _SH constants for _wfsopen()
   #include <share.h>
 #endif
 
-#define DEFAULT_APP_IMAGE_PATH SUNSHINE_ASSETS_DIR "/box.png"
-
 namespace proc {
   using namespace std::literals;
   namespace pt = boost::property_tree;
 
-  proc_t proc;
+  proc_t proc;  ///< Global process registry used to track and terminate child processes.
 
+  /**
+   * @brief RAII helper that runs shutdown cleanup when destroyed.
+   */
   class deinit_t: public platf::deinit_t {
   public:
+    /**
+     * @brief Destroy the process subsystem deinitializer.
+     */
     ~deinit_t() {
       proc.terminate();
     }
@@ -95,13 +100,26 @@ namespace proc {
     }
   }
 
+  /**
+   * @brief Resolve the working directory for a configured command.
+   *
+   * @param cmd Command line to execute or inspect.
+   * @param env Environment variables for the child process.
+   * @return Directory used to launch the command, falling back to PATH lookup when needed.
+   */
   boost::filesystem::path find_working_directory(const std::string &cmd, boost::process::v1::environment &env) {
     // Parse the raw command string into parts to get the actual command portion
+    std::vector<std::string> parts;
+    try {
 #ifdef _WIN32
-    auto parts = boost::program_options::split_winmain(cmd);
+      parts = boost::program_options::split_winmain(cmd);
 #else
-    auto parts = boost::program_options::split_unix(cmd);
+      parts = boost::program_options::split_unix(cmd);
 #endif
+    } catch (boost::escaped_list_error &err) {
+      BOOST_LOG(error) << "Boost failed to parse command ["sv << cmd << "] because " << err.what();
+      return boost::filesystem::path();
+    }
     if (parts.empty()) {
       BOOST_LOG(error) << "Unable to parse command: "sv << cmd;
       return boost::filesystem::path();
@@ -176,7 +194,7 @@ namespace proc {
 #ifdef _WIN32
       // fopen() interprets the filename as an ANSI string on Windows, so we must convert it
       // to UTF-16 and use the wchar_t variants for proper Unicode log file path support.
-      auto woutput = platf::from_utf8(_app.output);
+      auto woutput = utf_utils::from_utf8(_app.output);
 
       // Use _SH_DENYNO to allow us to open this log file again for writing even if it is
       // still open from a previous execution. This is required to handle the case of a
@@ -217,10 +235,14 @@ namespace proc {
         }
       }
 
-      child.wait();
+      child.wait(ec);
+      if (ec) {
+        BOOST_LOG(error) << '[' << cmd.do_cmd << "] wait failed with error code ["sv << ec << ']';
+        return -1;
+      }
       auto ret = child.exit_code();
-      if (ret != 0 && ec != std::errc::permission_denied) {
-        BOOST_LOG(error) << '[' << cmd.do_cmd << "] failed with code ["sv << ret << ']';
+      if (ret != 0) {
+        BOOST_LOG(error) << '[' << cmd.do_cmd << "] exited with code ["sv << ret << ']';
         return -1;
       }
     }
@@ -379,6 +401,13 @@ namespace proc {
     assert(!_process.running());
   }
 
+  /**
+   * @brief Find the closing parenthesis for an environment-variable expression.
+   *
+   * @param begin Iterator positioned at the opening parenthesis.
+   * @param end End iterator for the expression being scanned.
+   * @return Iterator for the matching closing parenthesis, or end when unmatched.
+   */
   std::string_view::iterator find_match(std::string_view::iterator begin, std::string_view::iterator end) {
     int stack = 0;
 
@@ -400,6 +429,13 @@ namespace proc {
     return begin;
   }
 
+  /**
+   * @brief Parse env val.
+   *
+   * @param env Environment variables for the child process.
+   * @param val_raw Raw value that may contain $(NAME) substitutions.
+   * @return Value with recognized environment-variable substitutions expanded.
+   */
   std::string parse_env_val(boost::process::v1::native_environment &env, const std::string_view &val_raw) {
     auto pos = std::begin(val_raw);
     auto dollar = std::find(pos, std::end(val_raw), '$');
@@ -455,6 +491,43 @@ namespace proc {
     return ss.str();
   }
 
+  /**
+   * @brief Validates a path whether it is a valid PNG.
+   * @param path The path to the PNG file.
+   * @return true if the file has a valid PNG signature, false otherwise.
+   */
+  bool check_valid_png(const std::filesystem::path &path) {
+    // PNG signature as defined in PNG specification
+    // http://www.libpng.org/pub/png/spec/1.2/PNG-Structure.html
+    static constexpr std::array<unsigned char, 8> PNG_SIGNATURE = {
+      0x89,
+      0x50,
+      0x4E,
+      0x47,
+      0x0D,
+      0x0A,
+      0x1A,
+      0x0A
+    };
+
+    std::ifstream file(path, std::ios::binary);
+    if (!file) {
+      return false;
+    }
+
+    std::array<unsigned char, 8> header;
+    file.read(reinterpret_cast<char *>(header.data()), 8);
+
+    if (file.gcount() != 8) {
+      return false;
+    }
+
+    return header == PNG_SIGNATURE;
+  }
+
+  /**
+   * @brief Validate app image path.
+   */
   std::string validate_app_image_path(std::string app_image_path) {
     if (app_image_path.empty()) {
       return DEFAULT_APP_IMAGE_PATH;
@@ -464,25 +537,36 @@ namespace proc {
     auto image_extension = std::filesystem::path(app_image_path).extension().string();
     boost::to_lower(image_extension);
 
-    // return the default box image if extension is not "png"
+    // return the default box image if the extension is not "png"
     if (image_extension != ".png") {
       return DEFAULT_APP_IMAGE_PATH;
     }
 
     // check if image is in assets directory
-    auto full_image_path = std::filesystem::path(SUNSHINE_ASSETS_DIR) / app_image_path;
-    if (std::filesystem::exists(full_image_path)) {
+    if (auto full_image_path = std::filesystem::path(SUNSHINE_ASSETS_DIR) / app_image_path; std::filesystem::exists(full_image_path)) {
+      // Validate PNG signature
+      if (!check_valid_png(full_image_path)) {
+        BOOST_LOG(warning) << "Invalid PNG file at path ["sv << full_image_path << ']';
+        return DEFAULT_APP_IMAGE_PATH;
+      }
       return full_image_path.string();
-    } else if (app_image_path == "./assets/steam.png") {
+    }
+
+    if (app_image_path == "./assets/steam.png") {
       // handle old default steam image definition
       return SUNSHINE_ASSETS_DIR "/steam.png";
     }
 
     // check if specified image exists
-    std::error_code code;
-    if (!std::filesystem::exists(app_image_path, code)) {
+    if (std::error_code code; !std::filesystem::exists(app_image_path, code)) {
       // return default box image if image does not exist
       BOOST_LOG(warning) << "Couldn't find app image at path ["sv << app_image_path << ']';
+      return DEFAULT_APP_IMAGE_PATH;
+    }
+
+    // Validate PNG signature
+    if (!check_valid_png(app_image_path)) {
+      BOOST_LOG(warning) << "Invalid PNG file at path ["sv << app_image_path << ']';
       return DEFAULT_APP_IMAGE_PATH;
     }
 
@@ -491,6 +575,12 @@ namespace proc {
     return app_image_path;
   }
 
+  /**
+   * @brief Calculate the SHA-256 digest for a file.
+   *
+   * @param filename File path whose contents should be hashed.
+   * @return Lowercase hexadecimal SHA-256 digest, or std::nullopt on read/hash failure.
+   */
   std::optional<std::string> calculate_sha256(const std::string &filename) {
     crypto::md_ctx_t ctx {EVP_MD_CTX_create()};
     if (!ctx) {
@@ -526,6 +616,12 @@ namespace proc {
     return ss.str();
   }
 
+  /**
+   * @brief Calculate the CRC-32 checksum for a string.
+   *
+   * @param input Bytes to include in the checksum.
+   * @return CRC-32 value for the input bytes.
+   */
   uint32_t calculate_crc32(const std::string &input) {
     boost::crc_32_type result;
     result.process_bytes(input.data(), input.length());
@@ -563,6 +659,9 @@ namespace proc {
     return std::make_tuple(id_no_index, id_with_index);
   }
 
+  /**
+   * @brief Parse serialized text into the corresponding runtime representation.
+   */
   std::optional<proc::proc_t> parse(const std::string &file_name) {
     pt::ptree tree;
 
@@ -694,6 +793,9 @@ namespace proc {
     return std::nullopt;
   }
 
+  /**
+   * @brief Refresh cached platform state from the operating system.
+   */
   void refresh(const std::string &file_name) {
     auto proc_opt = proc::parse(file_name);
 

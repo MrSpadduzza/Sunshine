@@ -5,6 +5,10 @@
 
 // Required for IPV6_PKTINFO with Darwin headers
 #ifndef __APPLE_USE_RFC_3542  // NOLINT(bugprone-reserved-identifier)
+  /**
+   * @def __APPLE_USE_RFC_3542
+   * @brief Macro for APPLE USE RFC 3542.
+   */
   #define __APPLE_USE_RFC_3542 1
 #endif
 
@@ -19,6 +23,7 @@
 #include <mach-o/dyld.h>
 #include <net/if_dl.h>
 #include <pwd.h>
+#include <sys/qos.h>
 
 // lib includes
 #include <boost/asio/ip/address.hpp>
@@ -33,7 +38,7 @@
 
 using namespace std::literals;
 namespace fs = std::filesystem;
-namespace bp = boost::process;
+namespace bp = boost::process::v1;
 
 namespace platf {
 
@@ -42,7 +47,17 @@ namespace platf {
 #if __MAC_OS_X_VERSION_MAX_ALLOWED < 110000  // __MAC_11_0
   // If they're not in the SDK then we can use our own function definitions.
   // Need to use weak import so that this will link in macOS 10.14 and earlier
+  /**
+   * @brief Query macOS screen-capture permission without prompting the user.
+   *
+   * @return True when screen-capture permission is granted.
+   */
   extern "C" bool CGPreflightScreenCaptureAccess(void) __attribute__((weak_import));
+  /**
+   * @brief Request macOS screen-capture permission from the user.
+   *
+   * @return True when screen-capture permission is granted.
+   */
   extern "C" bool CGRequestScreenCaptureAccess(void) __attribute__((weak_import));
 #endif
 
@@ -51,6 +66,9 @@ namespace platf {
   }  // namespace
 
   // Return whether screen capture is allowed for this process.
+  /**
+   * @brief Check whether screen capture allowed.
+   */
   bool is_screen_capture_allowed() {
     return screen_capture_allowed;
   }
@@ -211,6 +229,35 @@ namespace platf {
   }
 
   void adjust_thread_priority(thread_priority_e priority) {
+    qos_class_t mac_priority;
+
+    switch (priority) {
+      case thread_priority_e::low:
+        mac_priority = QOS_CLASS_UTILITY;
+        break;
+      case thread_priority_e::normal:
+        mac_priority = QOS_CLASS_DEFAULT;
+        break;
+      case thread_priority_e::high:
+        mac_priority = QOS_CLASS_USER_INITIATED;
+        break;
+      case thread_priority_e::critical:
+        mac_priority = QOS_CLASS_USER_INTERACTIVE;
+        break;
+      default:
+        BOOST_LOG(error) << "Unknown thread priority: "sv << (int) priority;
+        return;
+    }
+
+    // https://github.com/apple/darwin-libpthread/blob/main/include/sys/qos.h
+    pthread_set_qos_class_self_np(mac_priority, 0);
+  }
+
+  void set_thread_name(const std::string &name) {
+    pthread_setname_np(name.c_str());
+  }
+
+  void enable_mouse_keys() {
     // Unimplemented
   }
 
@@ -406,8 +453,17 @@ namespace platf {
   // are disconnected.
   static std::atomic<int> qos_ref_count = 0;
 
+  /**
+   * @brief Owns platform QoS state that is restored during cleanup.
+   */
   class qos_t: public deinit_t {
   public:
+    /**
+     * @brief Apply macOS socket QoS settings for scoped cleanup.
+     *
+     * @param sockfd Native socket descriptor whose options are updated.
+     * @param options Request options or socket options to apply.
+     */
     qos_t(int sockfd, std::vector<std::tuple<int, int, int>> options):
         sockfd(sockfd),
         options(options) {
@@ -432,11 +488,6 @@ namespace platf {
 
   /**
    * @brief Enables QoS on the given socket for traffic to the specified destination.
-   * @param native_socket The native socket handle.
-   * @param address The destination address for traffic sent on this socket.
-   * @param port The destination port for traffic sent on this socket.
-   * @param data_type The type of traffic sent on this socket.
-   * @param dscp_tagging Specifies whether to enable DSCP tagging on outgoing traffic.
    */
   std::unique_ptr<deinit_t> enable_socket_qos(uintptr_t native_socket, boost::asio::ip::address &address, uint16_t port, qos_data_type_e data_type, bool dscp_tagging) {
     int sockfd = (int) native_socket;
@@ -516,6 +567,9 @@ namespace platf {
     }
   }
 
+  /**
+   * @brief macOS high-precision timer implementation backed by a worker thread.
+   */
   class macos_high_precision_timer: public high_precision_timer {
   public:
     void sleep_for(const std::chrono::nanoseconds &duration) override {
@@ -529,6 +583,10 @@ namespace platf {
 
   std::unique_ptr<high_precision_timer> create_high_precision_timer() {
     return std::make_unique<macos_high_precision_timer>();
+  }
+
+  std::string resolve_render_device() {
+    return {};
   }
 }  // namespace platf
 

@@ -8,6 +8,13 @@ project(Sunshine VERSION 0.0.0
         DESCRIPTION "Self-hosted game stream host for Moonlight"
         HOMEPAGE_URL "https://app.lizardbyte.dev/Sunshine")
 
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+if(NOT DEFINED CMAKE_CUDA_STANDARD)
+    set(CMAKE_CUDA_STANDARD 17)
+    set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+endif()
+
 set(PROJECT_LICENSE "GPL-3.0-only")
 
 set(PROJECT_FQDN "dev.lizardbyte.app.Sunshine")
@@ -22,6 +29,10 @@ your favorite web browser. Pair from the local server or any mobile device.")
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     message(STATUS "Setting build type to 'Release' as none was specified.")
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build." FORCE)
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+    set(FREEBSD ON)
 endif()
 
 # set the module path, used for includes
