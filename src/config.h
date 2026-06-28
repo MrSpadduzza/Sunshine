@@ -76,6 +76,9 @@ namespace config {
     } nv_legacy;  ///< Legacy NVIDIA encoder options kept for config compatibility.
 
     struct {
+      /**
+       * @brief Intel Quick Sync Video encoder configuration.
+       */
       std::optional<int> qsv_preset;
       std::optional<int> qsv_cavlc;
       bool qsv_slow_hevc;
@@ -130,7 +133,6 @@ namespace config {
       std::string qsv_scenario;
       std::string qsv_look_ahead_downsampling;
       std::string qsv_int_ref_type;
-      //
     } qsv;
 
     struct {

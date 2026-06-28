@@ -395,7 +395,12 @@ namespace config {
       return std::nullopt;
     }
 
-    // Optional for advanced QSV encoder
+    /**
+     * @brief Converts a string view into an on/off/auto QSV option value.
+     *
+     * @param value String value to parse.
+     * @return Parsed QSV option value.
+     */
     std::optional<int> on_off_auto_from_view(const std::string_view &value) {
       if (value == "auto"sv) {
         return std::nullopt;
@@ -409,7 +414,7 @@ namespace config {
       return std::nullopt;
     }    
 
-  }  // namespace qsv
+  }
 
   namespace vt {
 
@@ -1200,7 +1205,14 @@ namespace config {
     }
   }
   
-  // Range helper optional-aware for advanced QSV encoder
+  /**
+   * @brief Parses and validates an integer configuration value within a range.
+   *
+   * @param vars Configuration key/value map.
+   * @param name Configuration option name.
+   * @param input Destination optional integer.
+   * @param range Inclusive valid range.
+   */
   void int_between_f(std::unordered_map<std::string, std::string> &vars, const std::string &name, std::optional<int> &input, const std::pair<int, int> &range) {
     std::optional<int> temp;
 
